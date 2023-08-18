@@ -10,7 +10,7 @@
 - Suporte para diversas categorias de produtos
 - Drop Shipping e Estoque Regular
 
-## Contexo
+## Contexto
 
 <p align="justify">Mantenha o controle completo sobre todos os produtos em seu estoque, registre entradas e saídas de forma eficiente. O SupplyFlow oferece insights inteligentes sobre quando e o que repor, com base nas demandas reais e nas previsões de consumo. Simplifique o processo de compras, criando listas de compras com base nos níveis de estoque e nas necessidades futuras. Tome decisões informadas e mantenha os custos sob controle.</p>
 
