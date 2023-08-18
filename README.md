@@ -20,3 +20,8 @@
 
 ## Trade-offs
 
+### Participante: 
+|Pró|Contra|
+| -------- | -------- | 
+| | |
+
