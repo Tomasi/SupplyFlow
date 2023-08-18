@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-<p align="justify"> O objetivo principal do SupplyFlow é capacitar as empresas a atingir um nível superior operacional, fornecendo ferramentas inteligentes para otimizar seus processos de gerenciamento de estoque e cadeia de suprimentos. O software visa simplificar a tomada de decisões, melhorar a visibilidade da cadeia de suprimentos e aumentar a agilidade para enfrentar os desafios em um ambiente de negócios em constante evolução. </p>
+<p align="justify"> O objetivo principal do SupplyFlow é capacitar as empresas a atingir um nível superior operacional, fornecendo um sistema inteligente para otimizar seus processos de gerenciamento de estoque e cadeia de suprimentos. O software visa simplificar a tomada de decisões, melhorar a visibilidade da cadeia de suprimentos e aumentar a agilidade para enfrentar os desafios em um ambiente de negócios em constante evolução. </p>
 
 ## Escopo
 
