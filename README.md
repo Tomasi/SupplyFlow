@@ -21,7 +21,8 @@
 ## Trade-offs
 
 ### Participante: 
-|Pró|Contra|
+|Foco|Perda|
 | -------- | -------- | 
-| | |
-
+| Manutenabilidade | Usabilidade |
+| Confiabilidade   | Eficiência  |
+| Funcionalidade   | Portabilidade |
