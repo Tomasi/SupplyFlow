@@ -20,7 +20,6 @@
 
 ## Trade-offs
 
-### Participante: 
 |Foco|Perda|
 | -------- | -------- | 
 | Manutenabilidade | Usabilidade |
