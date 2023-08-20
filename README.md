@@ -20,8 +20,8 @@
 
 ## Trade-offs
 
-|Prós|Contras|
-| -------- | -------- | Motivo |
+|Prós|Contras| Motivo |
+| -------- | -------- | -------- |
 | Manutenabilidade | Usabilidade |  |
 | Confiabilidade   | Eficiência  |  |
 | Funcionalidade   | Portabilidade |  |
