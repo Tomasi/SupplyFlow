@@ -1,12 +1,3 @@
-# Índice 
-
-* [Requisitos](#Requisitos)
-* [Aplicação](#SupplyFlow)
-
-
-# Requisitos
-
-
 # SupplyFlow
 
 ## Objetivo
