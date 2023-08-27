@@ -22,6 +22,6 @@
 
 |Prós|Contras| Motivo |
 | -------- | -------- | -------- |
-| Manutenabilidade | Usabilidade |  |
+| Manutenabilidade | Usabilidade | Foi priorizado aspectos como fácil manutenção e estabilidade |
 | Confiabilidade   | Eficiência  |  |
 | Funcionalidade   | Portabilidade |  |
