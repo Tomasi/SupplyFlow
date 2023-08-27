@@ -8,7 +8,7 @@
 
 - Aplicação WEB
 - Suporte para diversas categorias de produtos
-- Drop Shipping e Estoque Regular
+- Estoque Regular
 
 ## Contexto
 
