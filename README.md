@@ -19,9 +19,9 @@
 ## C4 - General
 
 ## Trade-offs
+| -------- |
+| Confiabilidade |  
+| Usabilidade   |   
+| Manutenabilidade   | 
 
-|Prós|Contras| Motivo |
-| -------- | -------- | -------- |
-| Manutenabilidade | Usabilidade | Foi priorizado aspectos como fácil manutenção e estabilidade |
-| Confiabilidade   | Eficiência  |  |
-| Funcionalidade   | Portabilidade |  |
+
