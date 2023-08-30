@@ -19,7 +19,7 @@
 ## C4 - General
 
 ## Trade-offs
-| -------- |
+
 | Confiabilidade |  
 | Usabilidade   |   
 | Manutenabilidade   | 
