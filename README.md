@@ -20,8 +20,8 @@
 
 ## Trade-offs
 
-| Confiabilidade |  
-| Usabilidade   |   
-| Manutenabilidade   | 
+- Confiabilidade
+- Usabilidade  
+- Manutenabilidade   
 
 
