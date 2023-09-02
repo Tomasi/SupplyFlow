@@ -12,6 +12,8 @@
 
 ## Contexto
 
+- [C4Model.Contexto](https://drive.google.com/file/d/1JsUiNJ1vfnW-01cuZCHTYmnyuxkWclcy/view?usp=sharing)
+
 <p align="justify">Mantenha o controle completo sobre todos os produtos em seu estoque, registre entradas e saídas de forma eficiente. O SupplyFlow oferece insights inteligentes sobre quando e o que repor, com base nas demandas reais e nas previsões de consumo. Simplifique o processo de compras, criando listas de compras com base nos níveis de estoque e nas necessidades futuras. Tome decisões e mantenha os custos sob controle.</p>
 
 ## Restrições
