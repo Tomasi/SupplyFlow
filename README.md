@@ -18,8 +18,7 @@ Mantenha o controle completo sobre todos os produtos em seu estoque, registre en
 
 ## Contexto
 
-<p align="justify">Aplicação atua como uma ferramenta complementar ao conhecimento do usuário, é um requisito que o responsável possua conhecimentos relacionados ao gerenciamento e funcionalidades de um estoque. Aplicação web responsiva, não foi arquitetura para outros dispositivos.
-    Optou-se por características de confiabilidade, usabilidade e manutenabilidade para proporcionar melhores experiências relacionadas ao negócio e interação.</p>
+<p align="justify">A aplicação desempenha um papel complementar ao conhecimento do usuário, sendo essencial que o responsável tenha proficiência em gerenciamento de estoque e suas funcionalidades. Trata-se de uma aplicação web responsiva, desenvolvida exclusivamente para este ambiente. Nossa abordagem prioriza características de confiabilidade, usabilidade e facilidade de manutenção, com o objetivo de proporcionar experiências mais satisfatórias no que diz respeito aos negócios e à interação com a aplicação.</p>
 
 ## Restrições
 
