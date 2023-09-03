@@ -14,15 +14,15 @@ Mantenha o controle completo sobre todos os produtos em seu estoque, registre en
 
 ## Diagramas
 
+- [(C4Model.Contexto)](https://drive.google.com/file/d/1VSJ5fRvzJEzwLn7JBGe3nAu40cpLjjBe/view?usp=sharing)
 - [C4Model.Containers](https://drive.google.com/file/d/1JsUiNJ1vfnW-01cuZCHTYmnyuxkWclcy/view?usp=sharing)
+- [(C4Model.Componentes)](https://drive.google.com/file/d/1hpJ1y6vrj-9h3Ka2L9MQdXEUGbs5Mw0w/view?usp=sharing)
 
 ## Contexto
 
 <p align="justify">A aplicação desempenha um papel complementar ao conhecimento do usuário, sendo essencial que o responsável tenha proficiência em gerenciamento de estoque e suas funcionalidades. Trata-se de uma aplicação web responsiva, desenvolvida exclusivamente para este ambiente. Nossa abordagem prioriza características de confiabilidade, usabilidade e facilidade de manutenção, com o objetivo de proporcionar experiências mais satisfatórias no que diz respeito aos negócios e à interação com a aplicação.</p>
 
 ## Restrições
-
-## C4 - General
 
 ## Trade-offs
 
