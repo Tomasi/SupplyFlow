@@ -10,7 +10,7 @@ Mantenha o controle completo sobre todos os produtos em seu estoque, registre en
 
 - Aplicação WEB
 - Suporte para diversas categorias de produtos
-- Estoque Regular
+- Direcionado ao modelo de Estoque Regular
 
 ## Diagramas
 
