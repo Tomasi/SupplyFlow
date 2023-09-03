@@ -14,7 +14,7 @@ Mantenha o controle completo sobre todos os produtos em seu estoque, registre en
 
 ## Diagramas
 
-- [C4Model.Componentes](https://drive.google.com/file/d/1JsUiNJ1vfnW-01cuZCHTYmnyuxkWclcy/view?usp=sharing)
+- [C4Model.Containers](https://drive.google.com/file/d/1JsUiNJ1vfnW-01cuZCHTYmnyuxkWclcy/view?usp=sharing)
 
 ## Contexto
 
