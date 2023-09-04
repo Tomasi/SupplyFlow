@@ -9,7 +9,6 @@ Mantenha o controle completo sobre todos os produtos em seu estoque. O SupplyFlo
 ## Escopo
 
 - Aplicação WEB
-- Suporte para diversas categorias de produtos
 - Direcionado ao modelo de Estoque Regular
 
 ## C4 Model
