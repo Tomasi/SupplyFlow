@@ -12,7 +12,7 @@ Mantenha o controle completo sobre todos os produtos em seu estoque, registre en
 - Suporte para diversas categorias de produtos
 - Direcionado ao modelo de Estoque Regular
 
-## Diagramas
+## C4 Model
 
 - [(C4Model.Contexto)](https://drive.google.com/file/d/1VSJ5fRvzJEzwLn7JBGe3nAu40cpLjjBe/view?usp=sharing)
 - [(C4Model.Containers)](https://drive.google.com/file/d/1JsUiNJ1vfnW-01cuZCHTYmnyuxkWclcy/view?usp=sharing)
