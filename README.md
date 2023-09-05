@@ -29,8 +29,8 @@ Mantenha o controle completo sobre todos os produtos em seu estoque. O SupplyFlo
 - Usabilidade  
 - Manutenabilidade
 
-  ## Backlog
+## Backlog
 
-  [Board do Projeto](https://github.com/users/Tomasi/projects/2)
+[Board do Projeto](https://github.com/users/Tomasi/projects/2)
 
 
