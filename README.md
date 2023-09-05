@@ -27,6 +27,10 @@ Mantenha o controle completo sobre todos os produtos em seu estoque. O SupplyFlo
 
 - Confiabilidade
 - Usabilidade  
-- Manutenabilidade   
+- Manutenabilidade
+
+  ## Backlog
+
+  [Board do Projeto](https://github.com/users/Tomasi/projects/2)
 
 
