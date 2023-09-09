@@ -35,6 +35,7 @@ Mantenha o controle completo sobre todos os produtos em seu estoque. O SupplyFlo
 ## Diagramas UML
 
 [Cados de Uso](https://drive.google.com/file/d/13gdoXdUy9TaRNPD85DMjGmPWb4XYUIg-/view?usp=sharing)
-[(Diagrama de Sequência)](https://drive.google.com/file/d/10HpHJ4Tb2HKy8uGdD7xmqnosM2g6FF-h/view?usp=sharing)
+
+[Diagrama de Sequência](https://drive.google.com/file/d/10HpHJ4Tb2HKy8uGdD7xmqnosM2g6FF-h/view?usp=sharing)
 
 
