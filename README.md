@@ -23,6 +23,8 @@ Mantenha o controle completo sobre todos os produtos em seu estoque. O SupplyFlo
 
 ## Restrições
 
+- WEB Desktop
+
 ## Trade-offs
 
 - Confiabilidade
