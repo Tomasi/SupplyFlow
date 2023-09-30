@@ -41,7 +41,7 @@ const Navbar = () =>
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Estoque
+                        Meu Estoque
                     </Typography>
                 </Toolbar>
             </AppBar>

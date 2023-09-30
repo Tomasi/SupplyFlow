@@ -7,4 +7,5 @@ export function ItemCompra()
     this.Cadastro;
     this.Aprovacao;
     this.Finalizacao;
+    this.Situacao;
 }
