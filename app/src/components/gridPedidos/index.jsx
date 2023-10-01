@@ -1,7 +1,7 @@
+import React, { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import PedidoForm from '../pedidoCompra/pedidoForm';
 
 const columns = [
     {
@@ -66,38 +66,24 @@ const rows = [
     { id: 19, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
 ];
 
-function BasicButtons()
-{
-
-    var onApproveClick = () =>
-    {
-        alert("aprove")
-    }
-
-    var onReproveClick = () =>
-    {
-        alert("reprove")
-    }
-
-    return (
-        <Stack spacing={2} direction="row">
-            <Button onClick={onApproveClick} className='approveButton' variant="contained">Aprovar</Button>
-            <Button onClick={onReproveClick} className='reproveButton' variant="outlined">Reprovar</Button>
-        </Stack>
-    );
-}
-
-/**
- * @param {GridRowParams} params
- */
-function AbrirEdicaoPedido(params)
-{
-    alert(params.id)
-    alert("abrir edição")
-}
-
 export default function GridPedidos()
 {
+
+    const [isFormOpen, setIsFormOpen] = useState(false);
+
+    /**
+    * @param {GridRowParams} params
+    */
+    const HandleOpenDialog = () =>
+    {
+        setIsFormOpen(true);
+    };
+
+    const HandleCloseDialog = () =>
+    {
+        setIsFormOpen(false);
+    }
+
     return (
         <Box sx={{ height: '100%', width: '100%' }}>
             <DataGrid
@@ -113,10 +99,11 @@ export default function GridPedidos()
                 pageSizeOptions={[10]}
                 checkboxSelection={true}
                 disableRowSelectionOnClick={true}
-                onRowDoubleClick={AbrirEdicaoPedido}
+                onRowDoubleClick={HandleOpenDialog}
             />
-            <br></br>
-            <BasicButtons />
+            {isFormOpen && (
+                <PedidoForm open={isFormOpen} onClose={HandleCloseDialog} />
+            )}
         </Box>
     );
 }
