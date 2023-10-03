@@ -1,37 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import TextField from '@mui/material/TextField';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import Grid from '@mui/material/Grid';
 import { DataGrid } from '@mui/x-data-grid';
+import { Grid, TextField, Autocomplete } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref)
 {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function PedidoForm({ open, onClose })
+export default function PedidoForm({ open, onClose, pedidoCompra })
 {
     const [formData, setFormData] = useState({
-        fornecedor: '',
-        dataEntrega: '',
-        statusPedido: '',
-        observacoes: '',
+        Fornecedor: '',
+        DataEntrega: '',
+        Situacao: '',
+        Observacoes: '',
     });
 
     const [itemData, setItemData] = useState([]);
     const [itemFormData, setItemFormData] = useState({
-        codigoProduto: '',
+        codigo: '',
+        descricao: '',
         quantidade: '',
         precoUnitario: '',
         precoTotal: '',
     });
+
+    const [fornecedorProdutos, setFornecedorProdutos] = useState({});
+
+    useEffect(() =>
+    {
+        if (pedidoCompra)
+        {
+            setFormData(pedidoCompra);
+
+            if (pedidoCompra.Itens && pedidoCompra.Itens.length > 0)
+            {
+                setItemData(pedidoCompra.Itens);
+            }
+        }
+    }, [pedidoCompra]);
 
     const handleChange = (e) =>
     {
@@ -59,7 +74,7 @@ export default function PedidoForm({ open, onClose })
     {
         const newItem = {
             ...itemFormData,
-            id: itemData.length + 1
+            id: itemData.length + 1,
         };
         setItemData([...itemData, newItem]);
     };
@@ -67,9 +82,19 @@ export default function PedidoForm({ open, onClose })
     const handleDeleteSelectedItems = () =>
     {
         const selectedIds = new Set(itemData.map((item) => item.id));
-        console.log("Deletar item " + selectedIds)
         const updatedItemData = itemData.filter((item) => !selectedIds.has(item.id));
         setItemData(updatedItemData);
+    };
+
+    const handleFornecedorChange = (event, newValue) =>
+    {
+        setItemData([]);
+        setFornecedorProdutos((prevState) => ({
+            ...prevState,
+            [formData.Fornecedor]: itemData,
+        }));
+
+        handleChange({ target: { name: 'Fornecedor', value: newValue } });
     };
 
     const handleClose = () =>
@@ -79,17 +104,37 @@ export default function PedidoForm({ open, onClose })
 
     const handleSubmit = () =>
     {
-        console.log('Dados do Pedido:', formData);
-        console.log('Itens do Pedido:', itemData);
         onClose();
     };
 
     const columns = [
         {
-            field: 'codigoProduto',
+            field: 'codigo',
             headerName: 'Código do Produto',
-            width: 200,
+            width: 500,
             editable: true,
+            renderCell: (params) => (
+                <Autocomplete
+                    options={fornecedorProdutos[formData.Fornecedor] || []}
+                    value={params.value || null}
+                    onChange={(event, newValue) =>
+                    {
+                        handleItemChange({
+                            id: params.id,
+                            field: params.field,
+                            props: { value: newValue },
+                        });
+                    }}
+                    renderInput={(params) => (
+                        <TextField {...params} variant="outlined" fullWidth />
+                    )}
+                />
+            ),
+        },
+        {
+            field: 'descricao',
+            headerName: 'Descrição Produto',
+            width: 200,
         },
         {
             field: 'quantidade',
@@ -109,6 +154,9 @@ export default function PedidoForm({ open, onClose })
             width: 150,
         },
     ];
+
+    const fornecedores = ['Fornecedor A', 'Fornecedor B', 'Fornecedor C'];
+    const situacoes = ['Pendente', 'Aprovado', 'Em trânsito', 'Entregue'];
 
     return (
         <Dialog
@@ -136,24 +184,30 @@ export default function PedidoForm({ open, onClose })
                 </Toolbar>
             </AppBar>
             <Grid container spacing={2} sx={{ p: 2 }}>
-                {/* Campos do formulário */}
                 <Grid item xs={4} sm={4}>
-                    <TextField
-                        fullWidth
-                        label="Fornecedor"
-                        name="fornecedor"
-                        value={formData.fornecedor}
-                        onChange={handleChange}
-                        variant="outlined"
+                    <Autocomplete
+                        options={fornecedores}
+                        value={formData.Fornecedor || null}
+                        onChange={handleFornecedorChange}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                fullWidth
+                                label="Fornecedor"
+                                name="Fornecedor"
+                                variant="outlined"
+                            />
+                        )}
                     />
                 </Grid>
+
                 <Grid item xs={4} sm={4}>
                     <TextField
                         fullWidth
                         label="Data de Entrega Esperada"
-                        name="dataEntrega"
-                        type='date'
-                        value={formData.dataEntrega}
+                        name="DataEntrega"
+                        type="date"
+                        value={formData.DataEntrega}
                         onChange={handleChange}
                         variant="outlined"
                         InputLabelProps={{
@@ -162,32 +216,38 @@ export default function PedidoForm({ open, onClose })
                     />
                 </Grid>
                 <Grid item xs={4} sm={4}>
-                    <TextField
-                        fullWidth
-                        label="Status do Pedido"
-                        name="statusPedido"
-                        value={formData.statusPedido}
-                        onChange={handleChange}
-                        variant="outlined"
+                    <Autocomplete
+                        options={situacoes}
+                        value={formData.Situacao || null}
+                        onChange={(event, newValue) =>
+                        {
+                            handleChange({ target: { name: 'Situacao', value: newValue } });
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                fullWidth
+                                label="Situação"
+                                name="Situacao"
+                                variant="outlined"
+                            />
+                        )}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
                         label="Observações"
-                        name="observacoes"
+                        name="Observacoes"
                         multiline
                         rows={4}
-                        value={formData.observacoes}
+                        value={formData.Observacoes}
                         onChange={handleChange}
                         variant="outlined"
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button
-                        variant="outlined"
-                        onClick={handleAddItem}
-                    >
+                    <Button variant="outlined" onClick={handleAddItem}>
                         Adicionar Item
                     </Button>
                     <Button
@@ -205,7 +265,8 @@ export default function PedidoForm({ open, onClose })
                     columns={columns}
                     pageSize={5}
                     onEditCellChangeCommitted={handleItemChange}
-                    checkboxSelection
+                    checkboxSelection={true}
+                    disableRowSelectionOnClick={true}
                 />
             </div>
         </Dialog>

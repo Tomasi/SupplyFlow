@@ -30,7 +30,7 @@ public class PedidosCompraController : ControllerBase
             DataPedido = DateTimeOffset.UtcNow,
             Fornecedor = pedidoCompraDto.Fornecedor,
             Itens = pedidoCompraDto.Itens.Select(item => item.AsItemPedido()).ToList(),
-            StatusPedido = eStatusPedido.Pendente,
+            SituacaoPedido = EnumSituacao.Pendente,
             Observacao = pedidoCompraDto.Observacao
         };
 
@@ -49,7 +49,7 @@ public class PedidosCompraController : ControllerBase
 
         pedido.Itens = pedidoCompraDto.Itens.Select(item => item.AsItemPedido()).ToList();
         pedido.Fornecedor = pedidoCompraDto.Fornecedor;
-        pedido.StatusPedido = pedidoCompraDto.StatusPedido;
+        pedido.SituacaoPedido = pedidoCompraDto.Situacao;
         pedido.Observacao = pedidoCompraDto.Observacao;
 
         await _pedidoCompraRepository.UpdateAsync(pedido);
@@ -57,14 +57,14 @@ public class PedidosCompraController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> AlterarStatusAsync(Guid id, AlterarStatusDto aprovarPedido)
+    public async Task<ActionResult> AlterarStatusAsync(Guid id, AlterarSituacaoDto aprovarPedido)
     {
         var pedido = await _pedidoCompraRepository.GetAsync(id);
 
         if (pedido == null)
             return BadRequest();
 
-        pedido.StatusPedido = aprovarPedido.StatusPedido;
+        pedido.SituacaoPedido = aprovarPedido.Situacao;
         await _pedidoCompraRepository.UpdateAsync(pedido);
         return Ok();
     }

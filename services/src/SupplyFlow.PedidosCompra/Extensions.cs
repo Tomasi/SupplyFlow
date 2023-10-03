@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SupplyFlow.Service.Dtos;
 using SupplyFlow.Service.Entities;
 
@@ -8,12 +7,12 @@ public static class Extensios
 {
     public static PedidoDto AsDto(this PedidoCompra pedido)
     {
-        return new PedidoDto(pedido.Id, pedido.Itens?.Select(item => item.AsDto()).ToList(), pedido.DataPedido, pedido.Fornecedor, pedido.StatusPedido, pedido.Observacao);
+        return new PedidoDto(pedido.Id, pedido.NumeroPedido, pedido.Itens?.Select(item => item.AsDto()).ToList(), pedido.DataPedido, pedido.Fornecedor, pedido.SituacaoPedido, pedido.Observacao, pedido.DataAprovacao, pedido.DataEntrega);
     }
 
     public static ItemPedidoDto AsDto(this ItemPedido itemPedido)
     {
-        return new ItemPedidoDto(itemPedido.Id, itemPedido.Quantidade, itemPedido.PrecoUnitario);
+        return new ItemPedidoDto(itemPedido.Id, itemPedido.CodigoProduto, itemPedido.DescricaoProduto, itemPedido.Quantidade, itemPedido.PrecoUnitario);
     }
 
     public static ItemPedido AsItemPedido(this ItemPedidoDto itemPedidoDto)
@@ -21,6 +20,8 @@ public static class Extensios
         return new ItemPedido()
         {
             Id = itemPedidoDto.Id,
+            CodigoProduto = itemPedidoDto.CodigoProduto,
+            DescricaoProduto = itemPedidoDto.DescricaoProduto,
             PrecoUnitario = itemPedidoDto.PrecoUnitario,
             Quantidade = itemPedidoDto.Quantidade
         };

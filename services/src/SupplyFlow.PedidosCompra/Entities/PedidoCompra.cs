@@ -7,7 +7,10 @@ namespace SupplyFlow.Service.Entities
     public class PedidoCompra : IEntity
     {
         public Guid Id { get; set; }
+        public long NumeroPedido { get; set; }
         public DateTimeOffset DataPedido { get; set; }
+        public DateTimeOffset DataAprovacao { get; set; }
+        public DateTimeOffset DataEntrega { get; set; }
         public decimal TotalPedido
         {
             get
@@ -15,13 +18,13 @@ namespace SupplyFlow.Service.Entities
                 return Itens == null ? 0 : Itens.Sum(item => item.PrecoTotal);
             }
         }
-        public eStatusPedido StatusPedido { get; set; }
+        public EnumSituacao SituacaoPedido { get; set; }
         public string? Observacao { get; set; }
         public List<ItemPedido>? Itens { get; set; }
-        public Guid Fornecedor { get; set; }
+        public string? Fornecedor { get; set; }
     }
 
-    public enum eStatusPedido
+    public enum EnumSituacao
     {
         [Description("Pendente")]
         Pendente = 1,

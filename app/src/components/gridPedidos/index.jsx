@@ -1,91 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
-import PedidoForm from '../pedidoCompra/pedidoForm';
+import PedidoForm from '../pedidoForm/index';
 
 const columns = [
     {
-        field: 'Pedido',
+        field: 'numeroPedido',
         headerName: 'Pedido',
         width: 150,
         editable: false,
     },
     {
-        field: 'Produto',
-        headerName: 'Produto',
-        width: 300,
-        editable: false,
-    },
-    {
-        field: 'Quantidade',
-        headerName: 'Quantidade',
-        type: 'number',
-        width: 150,
-        editable: false,
-    },
-    {
-        field: 'Fornecedor',
+        field: 'fornecedor',
         headerName: 'Fornecedor',
         width: 300,
-    }, {
-        field: "Cadastro",
+    },
+    {
+        field: 'totalPedido',
+        headerName: 'Valor Total',
+        width: 300,
+    },
+    {
+        field: "dataPedido",
         headerName: "Cadastro",
-        with: 150
+        width: 150
     },
     {
         field: "Aprovacao",
         headerName: "Aprovação",
-        with: 150
+        width: 150
     },
     {
-        field: "Finalizacao",
-        headerName: "Finalização",
-        with: 150
+        field: "DataEntrega",
+        headerName: "Data Entrega",
+        width: 150
     },
-];
-
-const rows = [
-    { id: 1, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 2, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 3, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 4, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 5, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 6, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 7, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 8, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 9, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 10, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 11, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 12, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 13, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 14, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 15, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 16, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 17, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 18, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
-    { id: 19, Pedido: 1, Produto: '123', Quantidade: 3.2, Fornecedor: "s", Cadastro: '14/09/2023', Aprovacao: "14/09/2023", Finalizacao: "14/09/2023", Situacao: "Ativo" },
+    {
+        field: "Situacao",
+        headerName: "Situação",
+        width: 150
+    },
 ];
 
 export default function GridPedidos()
 {
-
+    const [rows, setRows] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [selectedPedido, setSelectedPedido] = useState(null);
 
-    /**
-    * @param {GridRowParams} params
-    */
-    const HandleOpenDialog = () =>
+    const handleCloseDialog = () =>
     {
+        setIsFormOpen(false);
+    };
+
+    const handleRowDoubleClick = (params) =>
+    {
+        const pedidoSelecionado = rows.find((row) => row.id === params.row.id);
+        setSelectedPedido(pedidoSelecionado);
         setIsFormOpen(true);
     };
 
-    const HandleCloseDialog = () =>
+    useEffect(() =>
     {
-        setIsFormOpen(false);
-    }
+        fetch("http://localhost:5050/pedidosCompra", {
+            method: 'GET'
+        })
+            .then((response) =>
+            {
+                if (!response.ok)
+                {
+                    throw new Error('Erro ao buscar dados de pedidos');
+                }
+                return response.json();
+            })
+            .then((data) =>
+            {
+                console.log(data)
+                setRows(data);
+            })
+            .catch((error) =>
+            {
+                console.error('Erro ao buscar dados de pedidos:', error);
+            });
+    }, []);
 
     return (
-        <Box sx={{ height: '100%', width: '100%' }}>
+        <div style={{ height: '100%', width: '100%' }}>
             <DataGrid
                 rows={rows}
                 columns={columns}
@@ -99,11 +99,11 @@ export default function GridPedidos()
                 pageSizeOptions={[10]}
                 checkboxSelection={true}
                 disableRowSelectionOnClick={true}
-                onRowDoubleClick={HandleOpenDialog}
+                onRowDoubleClick={handleRowDoubleClick}
             />
             {isFormOpen && (
-                <PedidoForm open={isFormOpen} onClose={HandleCloseDialog} />
+                <PedidoForm open={isFormOpen} onClose={handleCloseDialog} pedidoCompra={selectedPedido} />
             )}
-        </Box>
+        </div>
     );
 }
