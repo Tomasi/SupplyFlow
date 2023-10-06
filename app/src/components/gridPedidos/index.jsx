@@ -1,38 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
 import PedidoForm from '../pedidoForm/index';
 
 const columns = [
     {
-        field: 'numeroPedido',
+        field: 'Pedido',
         headerName: 'Pedido',
         width: 150,
         editable: false,
     },
     {
-        field: 'fornecedor',
+        field: 'Fornecedor',
         headerName: 'Fornecedor',
         width: 300,
     },
     {
-        field: 'totalPedido',
+        field: 'ValorTotal',
         headerName: 'Valor Total',
         width: 300,
     },
     {
-        field: "dataPedido",
+        field: "DataPedido",
         headerName: "Cadastro",
         width: 150
     },
     {
-        field: "Aprovacao",
+        field: "DataAprovacao",
         headerName: "Aprovação",
         width: 150
     },
     {
         field: "DataEntrega",
-        headerName: "Data Entrega",
+        headerName: "Entrega",
         width: 150
     },
     {
@@ -64,24 +63,20 @@ export default function GridPedidos()
     {
         fetch("http://localhost:5050/pedidosCompra", {
             method: 'GET'
-        })
-            .then((response) =>
+        }).then((response) =>
+        {
+            if (!response.ok)
             {
-                if (!response.ok)
-                {
-                    throw new Error('Erro ao buscar dados de pedidos');
-                }
-                return response.json();
-            })
-            .then((data) =>
-            {
-                console.log(data)
-                setRows(data);
-            })
-            .catch((error) =>
-            {
-                console.error('Erro ao buscar dados de pedidos:', error);
-            });
+                throw new Error('Erro ao buscar dados de pedidos');
+            }
+            return response.json();
+        }).then((data) =>
+        {
+            setRows(data);
+        }).catch((error) =>
+        {
+            throw new Error('Erri ai buscar dados de pedidos: ', error);
+        });
     }, []);
 
     return (

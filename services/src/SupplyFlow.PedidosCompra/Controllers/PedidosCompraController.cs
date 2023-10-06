@@ -4,68 +4,75 @@ using SupplyFlow.Common;
 using SupplyFlow.Contracts;
 using SupplyFlow.PedidosCompra;
 using SupplyFlow.Service.Dtos;
-using SupplyFlow.Service.Entities;
+using SupplyFlow.Common.Entities;
 
-namespace SupplyFlow.Service.Controllers;
+namespace SupplyFlow.Service.PedidosCompra.Controllers;
 
 [ApiController]
 [Route("pedidosCompra")]
 public class PedidosCompraController : ControllerBase
 {
 
-    private readonly IRepository<PedidoCompra> _pedidoCompraRepository;
+    private readonly IRepository<IEntity> _entityRepository;
     private readonly IPublishEndpoint _publishEndpoint;
-    public PedidosCompraController(IRepository<PedidoCompra> pedidoCompraRepository, IPublishEndpoint publishEndpoint)
+    public PedidosCompraController(IRepository<IEntity> entityRepository, IPublishEndpoint publishEndpoint)
     {
-        this._pedidoCompraRepository = pedidoCompraRepository;
+        this._entityRepository = entityRepository;
         this._publishEndpoint = publishEndpoint;
     }
 
     [HttpPost]
     public async Task<ActionResult<PedidoCompra>> PostAsync(CreatePedidoCompraDto pedidoCompraDto)
     {
+
+        var chavesItens = pedidoCompraDto.Itens.Select(item => item.Id);
+        var itens = (IEnumerable<ItemPedido>)_entityRepository.GetAllAsync(item => chavesItens.Contains(item.Id));
+
         PedidoCompra pedido = new()
         {
             Id = Guid.NewGuid(),
             DataPedido = DateTimeOffset.UtcNow,
-            Fornecedor = pedidoCompraDto.Fornecedor,
-            Itens = pedidoCompraDto.Itens.Select(item => item.AsItemPedido()).ToList(),
+            Fornecedor = (Fornecedor)await _entityRepository.GetAsync(pedidoCompraDto.Fornecedor),
+            Itens = itens.ToList(),
             SituacaoPedido = EnumSituacao.Pendente,
             Observacao = pedidoCompraDto.Observacao
         };
 
-        await _pedidoCompraRepository.CreateAsync(pedido);
-        await _publishEndpoint.Publish(new PedidoCompraCreated(pedido.Id, "", pedido.TotalPedido, pedido.DataPedido));
+        await _entityRepository.CreateAsync(pedido);
+        await _publishEndpoint.Publish(new PedidoCompraCreated(pedido.Id, "", pedido.PrecoTotal, pedido.DataPedido));
         return CreatedAtAction(nameof(GetByIdAsync), new { id = pedido.Id }, pedido);
     }
 
     [HttpPut]
     public async Task<ActionResult> PutAsync(UpdatePedidoCompraDto pedidoCompraDto)
     {
-        var pedido = await _pedidoCompraRepository.GetAsync(pedidoCompraDto.Id);
+        var pedido = (PedidoCompra)await _entityRepository.GetAsync(pedidoCompraDto.Id);
 
         if (pedido == null)
             return BadRequest();
 
-        pedido.Itens = pedidoCompraDto.Itens.Select(item => item.AsItemPedido()).ToList();
-        pedido.Fornecedor = pedidoCompraDto.Fornecedor;
+        var chavesItens = pedidoCompraDto.Itens.Select(item => item.Id);
+        var itens = (IEnumerable<ItemPedido>)_entityRepository.GetAllAsync(item => chavesItens.Contains(item.Id));
+
+        pedido.Itens = itens.ToList();
+        pedido.Fornecedor = (Fornecedor)await _entityRepository.GetAsync(pedidoCompraDto.Fornecedor);
         pedido.SituacaoPedido = pedidoCompraDto.Situacao;
         pedido.Observacao = pedidoCompraDto.Observacao;
 
-        await _pedidoCompraRepository.UpdateAsync(pedido);
+        await _entityRepository.UpdateAsync(pedido);
         return Ok();
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult> AlterarStatusAsync(Guid id, AlterarSituacaoDto aprovarPedido)
     {
-        var pedido = await _pedidoCompraRepository.GetAsync(id);
+        var pedido = (PedidoCompra)await _entityRepository.GetAsync(id);
 
         if (pedido == null)
             return BadRequest();
 
         pedido.SituacaoPedido = aprovarPedido.Situacao;
-        await _pedidoCompraRepository.UpdateAsync(pedido);
+        await _entityRepository.UpdateAsync(pedido);
         return Ok();
     }
 
@@ -77,15 +84,15 @@ public class PedidosCompraController : ControllerBase
             return BadRequest();
         }
 
-        var pedido = await _pedidoCompraRepository.GetAsync(id.GetValueOrDefault());
+        var pedido = (PedidoCompra)await _entityRepository.GetAsync(id.GetValueOrDefault());
         return Ok(pedido.AsDto());
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PedidoDto>>> GetAllAsync()
     {
-        var pedidos = await _pedidoCompraRepository.GetAllAsync();
-        return Ok(pedidos.Select(pedido => pedido.AsDto()));
+        var pedidos = (IEnumerable<PedidoCompra>)await _entityRepository.GetAllAsync();
+        return Ok(pedidos?.Select(pedido => pedido.AsDto()));
     }
 
 }

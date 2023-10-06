@@ -1,8 +1,7 @@
 
 using System.ComponentModel;
-using SupplyFlow.Common;
 
-namespace SupplyFlow.Service.Entities
+namespace SupplyFlow.Common.Entities
 {
     public class PedidoCompra : IEntity
     {
@@ -11,7 +10,7 @@ namespace SupplyFlow.Service.Entities
         public DateTimeOffset DataPedido { get; set; }
         public DateTimeOffset DataAprovacao { get; set; }
         public DateTimeOffset DataEntrega { get; set; }
-        public decimal TotalPedido
+        public decimal PrecoTotal
         {
             get
             {
@@ -21,7 +20,8 @@ namespace SupplyFlow.Service.Entities
         public EnumSituacao SituacaoPedido { get; set; }
         public string? Observacao { get; set; }
         public List<ItemPedido>? Itens { get; set; }
-        public string? Fornecedor { get; set; }
+        public Fornecedor? Fornecedor { get; set; }
+
     }
 
     public enum EnumSituacao

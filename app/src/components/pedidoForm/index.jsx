@@ -21,22 +21,41 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
         Fornecedor: '',
         DataEntrega: '',
         Situacao: '',
-        Observacoes: '',
+        Observacao: '',
     });
 
     const [itemData, setItemData] = useState([]);
     const [itemFormData, setItemFormData] = useState({
-        codigo: '',
-        descricao: '',
-        quantidade: '',
-        precoUnitario: '',
-        precoTotal: '',
+        CodigoProduto: '',
+        DescricaoProduto: '',
+        Quantidade: '',
+        PrecoUnitario: '',
+        PrecoTotal: '',
     });
 
     const [fornecedorProdutos, setFornecedorProdutos] = useState({});
 
     useEffect(() =>
     {
+
+        fetch("http://localhost:5050/fornecedores", {
+            method: 'GET'
+        }).then((response) =>
+        {
+            if (!response.ok)
+            {
+                throw new Error('Erro ao buscar dados dos fornecedores');
+            }
+            return response.json();
+        }).then((data) =>
+        {
+            const nomesFornecedores = data.map(fornecedor => fornecedor.NomeFornecedor);
+            setFornecedorProdutos(nomesFornecedores);
+        }).catch((error) =>
+        {
+            throw new Error('Erro ao buscar dados dos fornecedores: ', error);
+        });
+
         if (pedidoCompra)
         {
             setFormData(pedidoCompra);
@@ -109,7 +128,7 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
 
     const columns = [
         {
-            field: 'codigo',
+            field: 'CodigoProduto',
             headerName: 'Código do Produto',
             width: 500,
             editable: true,
@@ -132,30 +151,29 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
             ),
         },
         {
-            field: 'descricao',
+            field: 'DescricaoProduto',
             headerName: 'Descrição Produto',
             width: 200,
         },
         {
-            field: 'quantidade',
+            field: 'Quantidade',
             headerName: 'Quantidade',
             width: 150,
             editable: true,
         },
         {
-            field: 'precoUnitario',
+            field: 'PrecoUnitario',
             headerName: 'Preço Unitário',
             width: 150,
             editable: true,
         },
         {
-            field: 'precoTotal',
+            field: 'PrecoTotal',
             headerName: 'Preço Total',
             width: 150,
         },
     ];
 
-    const fornecedores = ['Fornecedor A', 'Fornecedor B', 'Fornecedor C'];
     const situacoes = ['Pendente', 'Aprovado', 'Em trânsito', 'Entregue'];
 
     return (
@@ -186,7 +204,7 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
             <Grid container spacing={2} sx={{ p: 2 }}>
                 <Grid item xs={4} sm={4}>
                     <Autocomplete
-                        options={fornecedores}
+                        options={fornecedorProdutos}
                         value={formData.Fornecedor || null}
                         onChange={handleFornecedorChange}
                         renderInput={(params) => (
@@ -241,7 +259,7 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
                         name="Observacoes"
                         multiline
                         rows={4}
-                        value={formData.Observacoes}
+                        value={formData.Observacao}
                         onChange={handleChange}
                         variant="outlined"
                     />

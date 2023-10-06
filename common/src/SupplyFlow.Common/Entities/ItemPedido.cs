@@ -1,6 +1,4 @@
-using SupplyFlow.Common;
-
-namespace SupplyFlow.Service.Entities
+namespace SupplyFlow.Common.Entities
 {
     public class ItemPedido : IEntity
     {
