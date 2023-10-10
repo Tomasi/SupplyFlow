@@ -2,7 +2,7 @@ using SupplyFlow.Common.MongoDB;
 using SupplyFlow.Common.MassTransit;
 using SupplyFlow.Common;
 
-var builder = WebApplication.CreateBuilder(args);   
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddMongo().AddMongoRepository<IEntity>("pedidosCompra").AddMassTransitWithRabbitMq();

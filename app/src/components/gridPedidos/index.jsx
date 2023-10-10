@@ -47,12 +47,12 @@ export default function GridPedidos()
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [selectedPedido, setSelectedPedido] = useState(null);
 
-    const handleCloseDialog = () =>
+    const OnCloseDialog = () =>
     {
         setIsFormOpen(false);
     };
 
-    const handleRowDoubleClick = (params) =>
+    const OnRowDoubleClick = (params) =>
     {
         const pedidoSelecionado = rows.find((row) => row.id === params.row.id);
         setSelectedPedido(pedidoSelecionado);
@@ -65,6 +65,7 @@ export default function GridPedidos()
             method: 'GET'
         }).then((response) =>
         {
+            console.log(response)
             if (!response.ok)
             {
                 throw new Error('Erro ao buscar dados de pedidos');
@@ -75,7 +76,7 @@ export default function GridPedidos()
             setRows(data);
         }).catch((error) =>
         {
-            throw new Error('Erri ai buscar dados de pedidos: ', error);
+            throw new Error('Erro ao buscar dados de pedidos: ', error);
         });
     }, []);
 
@@ -94,10 +95,10 @@ export default function GridPedidos()
                 pageSizeOptions={[10]}
                 checkboxSelection={true}
                 disableRowSelectionOnClick={true}
-                onRowDoubleClick={handleRowDoubleClick}
+                onRowDoubleClick={OnRowDoubleClick}
             />
             {isFormOpen && (
-                <PedidoForm open={isFormOpen} onClose={handleCloseDialog} pedidoCompra={selectedPedido} />
+                <PedidoForm open={isFormOpen} onClose={OnCloseDialog} pedidoCompra={selectedPedido} />
             )}
         </div>
     );

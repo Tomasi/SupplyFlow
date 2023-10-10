@@ -3,7 +3,7 @@ using SupplyFlow.Common.Entities;
 
 namespace SupplyFlow.PedidosCompra;
 
-public static class Extensios
+public static class Extensions
 {
     public static PedidoDto AsDto(this PedidoCompra pedido)
     {
@@ -24,10 +24,20 @@ public static class Extensios
     {
         return new ItemPedidoDto(
         itemPedido.Id,
-        itemPedido.CodigoProduto,
-        itemPedido.DescricaoProduto,
+        itemPedido.Produto?.CodigoProduto,
+        itemPedido.Produto?.Descricao,
         itemPedido.Quantidade,
         itemPedido.PrecoUnitario,
         itemPedido.PrecoTotal);
+    }
+
+    public static ItemPedido AsItemPedido(this CreateItemPedidoDto itemPedido)
+    {
+        return new ItemPedido()
+        {
+            Id = Guid.NewGuid(),
+            Produto = new Produto() { Id = itemPedido.Id },
+            Quantidade = itemPedido.Quantidade
+        };
     }
 }

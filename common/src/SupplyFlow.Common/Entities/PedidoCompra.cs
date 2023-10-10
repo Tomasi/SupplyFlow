@@ -1,8 +1,10 @@
 
 using System.ComponentModel;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SupplyFlow.Common.Entities
 {
+    [BsonDiscriminator("PedidoCompra")]
     public class PedidoCompra : IEntity
     {
         public Guid Id { get; set; }

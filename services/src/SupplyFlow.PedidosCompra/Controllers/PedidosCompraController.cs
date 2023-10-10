@@ -26,13 +26,18 @@ public class PedidosCompraController : ControllerBase
     {
 
         var chavesItens = pedidoCompraDto.Itens.Select(item => item.Id);
-        var itens = (IEnumerable<ItemPedido>)_entityRepository.GetAllAsync(item => chavesItens.Contains(item.Id));
+        var itens = pedidoCompraDto.Itens.Select(item => item.AsItemPedido());
+
+        foreach (var item in itens)
+        {
+            item.Produto = await _entityRepository.GetAsync<Produto>(item.Id);
+        }
 
         PedidoCompra pedido = new()
         {
             Id = Guid.NewGuid(),
             DataPedido = DateTimeOffset.UtcNow,
-            Fornecedor = (Fornecedor)await _entityRepository.GetAsync(pedidoCompraDto.Fornecedor),
+            Fornecedor = await _entityRepository.GetAsync<Fornecedor>(pedidoCompraDto.Fornecedor),
             Itens = itens.ToList(),
             SituacaoPedido = EnumSituacao.Pendente,
             Observacao = pedidoCompraDto.Observacao
@@ -46,16 +51,16 @@ public class PedidosCompraController : ControllerBase
     [HttpPut]
     public async Task<ActionResult> PutAsync(UpdatePedidoCompraDto pedidoCompraDto)
     {
-        var pedido = (PedidoCompra)await _entityRepository.GetAsync(pedidoCompraDto.Id);
+        var pedido = await _entityRepository.GetAsync<PedidoCompra>(pedidoCompraDto.Id);
 
         if (pedido == null)
             return BadRequest();
 
         var chavesItens = pedidoCompraDto.Itens.Select(item => item.Id);
-        var itens = (IEnumerable<ItemPedido>)_entityRepository.GetAllAsync(item => chavesItens.Contains(item.Id));
+        var itens = await _entityRepository.GetAllAsync<ItemPedido>(item => chavesItens.Contains(item.Id));
 
         pedido.Itens = itens.ToList();
-        pedido.Fornecedor = (Fornecedor)await _entityRepository.GetAsync(pedidoCompraDto.Fornecedor);
+        pedido.Fornecedor = await _entityRepository.GetAsync<Fornecedor>(pedidoCompraDto.Fornecedor);
         pedido.SituacaoPedido = pedidoCompraDto.Situacao;
         pedido.Observacao = pedidoCompraDto.Observacao;
 
@@ -66,7 +71,7 @@ public class PedidosCompraController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> AlterarStatusAsync(Guid id, AlterarSituacaoDto aprovarPedido)
     {
-        var pedido = (PedidoCompra)await _entityRepository.GetAsync(id);
+        var pedido = await _entityRepository.GetAsync<PedidoCompra>(id);
 
         if (pedido == null)
             return BadRequest();
@@ -84,14 +89,14 @@ public class PedidosCompraController : ControllerBase
             return BadRequest();
         }
 
-        var pedido = (PedidoCompra)await _entityRepository.GetAsync(id.GetValueOrDefault());
+        var pedido = await _entityRepository.GetAsync<PedidoCompra>(id.GetValueOrDefault());
         return Ok(pedido.AsDto());
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PedidoDto>>> GetAllAsync()
     {
-        var pedidos = (IEnumerable<PedidoCompra>)await _entityRepository.GetAllAsync();
+        var pedidos = await _entityRepository.GetAllAsync<PedidoCompra>();
         return Ok(pedidos?.Select(pedido => pedido.AsDto()));
     }
 

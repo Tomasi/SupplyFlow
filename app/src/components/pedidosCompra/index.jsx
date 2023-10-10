@@ -6,12 +6,12 @@ function NavigatorButtons()
 {
     var onAprovacaoClick = () =>
     {
-        alert("aprove")
+        alert("aprovar")
     }
 
     var onReprovacaoClick = () =>
     {
-        alert("reprove")
+        alert("reprovar")
     }
 
     var OnNovoPedidoClick = () =>

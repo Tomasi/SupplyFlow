@@ -3,10 +3,15 @@ namespace SupplyFlow.Common.Entities
     public class ItemPedido : IEntity
     {
         public Guid Id { get; set; }
-        public string? CodigoProduto { get; set; }
-        public string? DescricaoProduto { get; set; }
+        public Produto? Produto { get; set; }
         public int Quantidade { get; set; }
-        public decimal PrecoUnitario { get; set; }
+        public decimal PrecoUnitario
+        {
+            get
+            {
+                return (Produto?.Custo).GetValueOrDefault();
+            }
+        }
         public decimal PrecoTotal
         {
             get
