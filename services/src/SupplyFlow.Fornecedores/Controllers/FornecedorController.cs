@@ -7,6 +7,8 @@ using SupplyFlow.Service.Dtos;
 
 namespace SupplyFlow.Service.Fornecedores.Controllers;
 
+[ApiController]
+[Route("fornecedores")]
 public class FornecedorController : ControllerBase
 {
     private readonly IRepository<IEntity> _entityRepository;
@@ -22,7 +24,8 @@ public class FornecedorController : ControllerBase
     {
         Fornecedor fornecedor = new()
         {
-            Id = Guid.NewGuid()
+            Id = Guid.NewGuid(),
+            NomeFornecedor = fornecedorCompraDto.NomeFornecedor
         };
 
         await _entityRepository.CreateAsync(fornecedor);
@@ -38,6 +41,18 @@ public class FornecedorController : ControllerBase
         }
 
         var fornecedor = await _entityRepository.GetAsync<Fornecedor>(id.GetValueOrDefault());
+
+        if (fornecedor == null)
+        {
+            return NotFound("Fornecedor não encontrado");
+        }
         return Ok(fornecedor.AsDto());
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<FornecedorDto>>> GetAllAsync()
+    {
+        var fornecedores = await _entityRepository.GetAllAsync<Fornecedor>();
+        return Ok(fornecedores.Select(fornecedor => fornecedor.AsDto()));
     }
 }

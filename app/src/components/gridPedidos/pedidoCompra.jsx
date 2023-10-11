@@ -2,16 +2,16 @@ export class PedidoCompra
 {
     constructor()
     {
-        this.Id;
-        this.Pedido;
-        this.Fornecedor;
-        this.ValorTotal;
-        this.Quantidade;
-        this.Cadastro;
-        this.Aprovacao;
-        this.DataEntrega
-        this.Situacao;
-        this.Observacao;
+        this.id;
+        this.pedido;
+        this.dataPedido;
+        this.fornecedor;
+        this.situacao;
+        this.observacao;
+        this.dataAprovacao;
+        this.dataEntrega
+        this.precoTotal;
+        this.itens = [];
     }
 }
 
@@ -19,9 +19,11 @@ export class ItemPedido
 {
     constructor()
     {
-        this.Codigo;
-        this.Quantidade;
-        this.Descricao;
-        this.PrecoUnitario;
+        this.id;
+        this.codigoProduto;
+        this.descricaoProduto;
+        this.quantidade;
+        this.precoUnitario;
+        this.precoTotal;
     }
 }

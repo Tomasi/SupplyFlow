@@ -4,38 +4,38 @@ import PedidoForm from '../pedidoForm/index';
 
 const columns = [
     {
-        field: 'Pedido',
+        field: 'pedido',
         headerName: 'Pedido',
         width: 150,
         editable: false,
     },
     {
-        field: 'Fornecedor',
+        field: 'fornecedor',
         headerName: 'Fornecedor',
         width: 300,
     },
     {
-        field: 'ValorTotal',
+        field: 'precoTotal',
         headerName: 'Valor Total',
         width: 300,
     },
     {
-        field: "DataPedido",
+        field: "dataPedido",
         headerName: "Cadastro",
         width: 150
     },
     {
-        field: "DataAprovacao",
+        field: "dataAprovacao",
         headerName: "Aprovação",
         width: 150
     },
     {
-        field: "DataEntrega",
+        field: "dataEntrega",
         headerName: "Entrega",
         width: 150
     },
     {
-        field: "Situacao",
+        field: "situacao",
         headerName: "Situação",
         width: 150
     },

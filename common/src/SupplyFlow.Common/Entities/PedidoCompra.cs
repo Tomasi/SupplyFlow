@@ -9,9 +9,9 @@ namespace SupplyFlow.Common.Entities
     {
         public Guid Id { get; set; }
         public long NumeroPedido { get; set; }
-        public DateTimeOffset DataPedido { get; set; }
-        public DateTimeOffset DataAprovacao { get; set; }
-        public DateTimeOffset DataEntrega { get; set; }
+        public DateOnly DataPedido { get; set; }
+        public DateOnly DataAprovacao { get; set; }
+        public DateOnly DataEntrega { get; set; }
         public decimal PrecoTotal
         {
             get

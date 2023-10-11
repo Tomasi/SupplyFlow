@@ -36,7 +36,7 @@ public class PedidosCompraController : ControllerBase
         PedidoCompra pedido = new()
         {
             Id = Guid.NewGuid(),
-            DataPedido = DateTimeOffset.UtcNow,
+            DataPedido = DateOnly.FromDateTime(DateTime.Now),
             Fornecedor = await _entityRepository.GetAsync<Fornecedor>(pedidoCompraDto.Fornecedor),
             Itens = itens.ToList(),
             SituacaoPedido = EnumSituacao.Pendente,

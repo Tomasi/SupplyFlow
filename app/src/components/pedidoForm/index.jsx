@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref)
@@ -17,57 +17,69 @@ const Transition = React.forwardRef(function Transition(props, ref)
 
 export default function PedidoForm({ open, onClose, pedidoCompra })
 {
+
+    const [itensPedido, setItemData] = useState([]);
+    const [fornecedores, setFornecedor] = useState([]);
+    const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
     const [formData, setFormData] = useState({
-        Fornecedor: '',
-        DataEntrega: '',
-        Situacao: '',
-        Observacao: '',
+        fornecedor: '',
+        dataEntrega: '',
+        situacao: '',
+        observacao: '',
     });
 
-    const [itemData, setItemData] = useState([]);
-    const [itemFormData, setItemFormData] = useState({
-        CodigoProduto: '',
-        DescricaoProduto: '',
-        Quantidade: '',
-        PrecoUnitario: '',
-        PrecoTotal: '',
-    });
-
-    const [fornecedorProdutos, setFornecedorProdutos] = useState({});
+    const situacaoMap = {
+        1: 'Pendente',
+        2: 'Aprovado',
+        3: 'Em Trânsito',
+        4: 'Entregue',
+        5: 'Reprovado',
+    };
 
     useEffect(() =>
     {
-
-        fetch("http://localhost:5050/fornecedores", {
+        fetch("http://localhost:5285/fornecedores", {
             method: 'GET'
         }).then((response) =>
         {
             if (!response.ok)
             {
-                throw new Error('Erro ao buscar dados dos fornecedores');
+                console.error('Erro ao buscar dados dos fornecedores:', error);
             }
             return response.json();
         }).then((data) =>
         {
-            const nomesFornecedores = data.map(fornecedor => fornecedor.NomeFornecedor);
-            setFornecedorProdutos(nomesFornecedores);
+            if (!data.length === 0)
+            {
+                const fornecedores = data.map(fornecedor => ({
+                    id: fornecedor.id,
+                    descricao: fornecedor.NomeFornecedor
+                }));
+                setFornecedor(fornecedores);
+            }
         }).catch((error) =>
         {
-            throw new Error('Erro ao buscar dados dos fornecedores: ', error);
+            console.error('Erro ao buscar dados dos fornecedores:', error);
         });
 
         if (pedidoCompra)
         {
-            setFormData(pedidoCompra);
-
-            if (pedidoCompra.Itens && pedidoCompra.Itens.length > 0)
+            const pedidoCompraWithDefaults = {
+                ...pedidoCompra,
+                fornecedor: pedidoCompra.fornecedor || '',
+                dataEntrega: pedidoCompra.dataEntrega || '',
+                situacao: situacaoMap[pedidoCompra.situacao] || '',
+                observacao: pedidoCompra.observacao || '',
+            };
+            setFormData(pedidoCompraWithDefaults);
+            if (pedidoCompra.itens && pedidoCompra.itens.length > 0)
             {
-                setItemData(pedidoCompra.Itens);
+                setItemData(pedidoCompra.itens);
             }
         }
     }, [pedidoCompra]);
 
-    const handleChange = (e) =>
+    const OnFormChange = (e) =>
     {
         const { name, value } = e.target;
         setFormData({
@@ -76,99 +88,85 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
         });
     };
 
-    const handleItemChange = (params) =>
+    const OnItemChange = (params) =>
     {
         const itemId = params.id;
-        const itemIndex = itemData.findIndex((item) => item.id === itemId);
+        const itemIndex = itensPedido.findIndex((item) => item.id === itemId);
         const updatedItem = {
-            ...itemData[itemIndex],
+            ...itensPedido[itemIndex],
             [params.field]: params.props.value,
         };
-        const updatedItemData = [...itemData];
+        const updatedItemData = [...itensPedido];
         updatedItemData[itemIndex] = updatedItem;
         setItemData(updatedItemData);
     };
 
-    const handleAddItem = () =>
+    const OnAddItem = () =>
     {
         const newItem = {
-            ...itemFormData,
-            id: itemData.length + 1,
+            id: itensPedido.length + 1,
+            codigoProduto: '',
+            descricaoProduto: '',
+            quantidade: '',
+            precoUnitario: '',
+            precoTotal: '',
         };
-        setItemData([...itemData, newItem]);
+        setItemData([...itensPedido, newItem]);
     };
 
-    const handleDeleteSelectedItems = () =>
+    const OnDeleteSelectedItems = () =>
     {
-        const selectedIds = new Set(itemData.map((item) => item.id));
-        const updatedItemData = itemData.filter((item) => !selectedIds.has(item.id));
+        const updatedItemData = itensPedido.filter((item) =>
+        {
+            return !rowSelectionModel.includes(item.id);
+        });
         setItemData(updatedItemData);
+        setRowSelectionModel([]);
     };
 
-    const handleFornecedorChange = (event, newValue) =>
+    const OnFornecedorChange = (newValue) =>
     {
         setItemData([]);
-        setFornecedorProdutos((prevState) => ({
-            ...prevState,
-            [formData.Fornecedor]: itemData,
-        }));
-
-        handleChange({ target: { name: 'Fornecedor', value: newValue } });
+        setFornecedor(newValue);
+        OnFormChange({ target: { name: 'Fornecedor', value: newValue } });
     };
 
-    const handleClose = () =>
+    const OnClose = () =>
     {
         onClose();
     };
 
-    const handleSubmit = () =>
+    const OnSubmit = () =>
     {
         onClose();
     };
 
     const columns = [
         {
-            field: 'CodigoProduto',
+            field: 'codigoProduto',
             headerName: 'Código do Produto',
             width: 500,
-            editable: true,
-            renderCell: (params) => (
-                <Autocomplete
-                    options={fornecedorProdutos[formData.Fornecedor] || []}
-                    value={params.value || null}
-                    onChange={(event, newValue) =>
-                    {
-                        handleItemChange({
-                            id: params.id,
-                            field: params.field,
-                            props: { value: newValue },
-                        });
-                    }}
-                    renderInput={(params) => (
-                        <TextField {...params} variant="outlined" fullWidth />
-                    )}
-                />
-            ),
+            editable: true
         },
         {
-            field: 'DescricaoProduto',
+            field: 'descricaoProduto',
             headerName: 'Descrição Produto',
             width: 200,
         },
         {
-            field: 'Quantidade',
+            field: 'quantidade',
             headerName: 'Quantidade',
             width: 150,
             editable: true,
         },
         {
-            field: 'PrecoUnitario',
+            field: 'precoUnitario',
             headerName: 'Preço Unitário',
             width: 150,
             editable: true,
         },
         {
-            field: 'PrecoTotal',
+            field: 'precoTotal',
             headerName: 'Preço Total',
             width: 150,
         },
@@ -180,7 +178,7 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
         <Dialog
             fullScreen
             open={open}
-            onClose={handleClose}
+            onClose={OnClose}
             TransitionComponent={Transition}
         >
             <AppBar sx={{ position: 'relative' }}>
@@ -188,7 +186,7 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
                     <IconButton
                         edge="start"
                         color="inherit"
-                        onClick={handleClose}
+                        onClick={OnClose}
                         aria-label="close"
                     >
                         <CloseIcon />
@@ -196,7 +194,7 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
                     <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                         Formulário de Pedido
                     </Typography>
-                    <Button autoFocus color="inherit" onClick={handleSubmit}>
+                    <Button autoFocus color="inherit" onClick={OnSubmit}>
                         Salvar
                     </Button>
                 </Toolbar>
@@ -204,9 +202,9 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
             <Grid container spacing={2} sx={{ p: 2 }}>
                 <Grid item xs={4} sm={4}>
                     <Autocomplete
-                        options={fornecedorProdutos}
-                        value={formData.Fornecedor || null}
-                        onChange={handleFornecedorChange}
+                        options={fornecedores}
+                        value={formData.fornecedor || null}
+                        onChange={OnFornecedorChange}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -225,8 +223,8 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
                         label="Data de Entrega Esperada"
                         name="DataEntrega"
                         type="date"
-                        value={formData.DataEntrega}
-                        onChange={handleChange}
+                        value={formData.dataEntrega}
+                        onChange={OnFormChange}
                         variant="outlined"
                         InputLabelProps={{
                             shrink: true,
@@ -236,10 +234,10 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
                 <Grid item xs={4} sm={4}>
                     <Autocomplete
                         options={situacoes}
-                        value={formData.Situacao || null}
+                        value={formData.situacao || null}
                         onChange={(event, newValue) =>
                         {
-                            handleChange({ target: { name: 'Situacao', value: newValue } });
+                            OnFormChange({ target: { name: 'Situacao', value: newValue } });
                         }}
                         renderInput={(params) => (
                             <TextField
@@ -256,21 +254,21 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
                     <TextField
                         fullWidth
                         label="Observações"
-                        name="Observacoes"
+                        name="Observacao"
                         multiline
                         rows={4}
-                        value={formData.Observacao}
-                        onChange={handleChange}
+                        value={formData.observacao}
+                        onChange={OnFormChange}
                         variant="outlined"
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="outlined" onClick={handleAddItem}>
+                    <Button variant="outlined" onClick={OnAddItem}>
                         Adicionar Item
                     </Button>
                     <Button
                         variant="outlined"
-                        onClick={handleDeleteSelectedItems}
+                        onClick={OnDeleteSelectedItems}
                         sx={{ ml: 1 }}
                     >
                         Excluir Item(s)
@@ -279,11 +277,16 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
             </Grid>
             <div style={{ height: 400, width: '100%', marginTop: '16px' }}>
                 <DataGrid
-                    rows={itemData}
+                    rows={itensPedido}
                     columns={columns}
                     pageSize={5}
-                    onEditCellChangeCommitted={handleItemChange}
+                    onEditCellChangeCommitted={OnItemChange}
                     checkboxSelection={true}
+                    onRowSelectionModelChange={(newRowSelectionModel) =>
+                    {
+                        setRowSelectionModel(newRowSelectionModel);
+                    }}
+                    rowSelectionModel={rowSelectionModel}
                     disableRowSelectionOnClick={true}
                 />
             </div>
