@@ -9,6 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { DataGrid, gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 import { Grid, TextField, Autocomplete } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 
 const Transition = React.forwardRef(function Transition(props, ref)
 {
@@ -21,6 +22,15 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
     const [itensPedido, setItemData] = useState([]);
     const [fornecedores, setFornecedor] = useState([]);
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+    const formatMoeda = (preco) =>
+    {
+        const formatter = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        });
+
+        return formatter.format(preco);
+    }
     const [formData, setFormData] = useState({
         fornecedor: '',
         dataEntrega: '',
@@ -79,6 +89,24 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
         }
     }, [pedidoCompra]);
 
+    function criaPedido()
+    {
+        const url = "http://localhost:5050"
+        const pedido = {
+            fornecedor: formData.fornecedor,
+            dataEntrega: formData.dataEntrega,
+            situacao: formData.situacao,
+            observacao: formData.observacao,
+            itens: itensPedido,
+        }
+        console.log(pedido)
+    }
+
+    function atualizaPedido()
+    {
+
+    }
+
     const OnFormChange = (e) =>
     {
         const { name, value } = e.target;
@@ -90,12 +118,22 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
 
     const OnItemChange = (params) =>
     {
+        console.log(params)
         const itemId = params.id;
         const itemIndex = itensPedido.findIndex((item) => item.id === itemId);
         const updatedItem = {
             ...itensPedido[itemIndex],
             [params.field]: params.props.value,
         };
+
+        // Calcula o preço total com base na quantidade e no preço unitário
+        if (params.field === 'quantidade')
+        {
+            const quantidade = parseFloat(updatedItem.quantidade);
+            const precoUnitario = parseFloat(updatedItem.precoUnitario);
+            updatedItem.precoTotal = quantidade * precoUnitario;
+        }
+
         const updatedItemData = [...itensPedido];
         updatedItemData[itemIndex] = updatedItem;
         setItemData(updatedItemData);
@@ -104,12 +142,12 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
     const OnAddItem = () =>
     {
         const newItem = {
-            id: itensPedido.length + 1,
+            id: uuidv4(),
             codigoProduto: '',
             descricaoProduto: '',
-            quantidade: '',
-            precoUnitario: '',
-            precoTotal: '',
+            quantidade: 0,
+            precoUnitario: 0,
+            precoTotal: 0,
         };
         setItemData([...itensPedido, newItem]);
     };
@@ -138,6 +176,13 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
 
     const OnSubmit = () =>
     {
+        if (!pedidoCompra)
+        {
+            criaPedido();
+        } else
+        {
+            atualizaPedido();
+        }
         onClose();
     };
 
@@ -157,6 +202,7 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
             field: 'quantidade',
             headerName: 'Quantidade',
             width: 150,
+            type: 'number',
             editable: true,
         },
         {
@@ -164,11 +210,21 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
             headerName: 'Preço Unitário',
             width: 150,
             editable: true,
+            type: 'number',
+            renderCell: (params) =>
+            {
+                return formatMoeda(params.value);
+            },
         },
         {
             field: 'precoTotal',
             headerName: 'Preço Total',
             width: 150,
+            type: 'number',
+            renderCell: (params) =>
+            {
+                return formatMoeda(params.value);
+            },
         },
     ];
 
@@ -220,7 +276,7 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
                 <Grid item xs={4} sm={4}>
                     <TextField
                         fullWidth
-                        label="Data de Entrega Esperada"
+                        label="Entrega"
                         name="DataEntrega"
                         type="date"
                         value={formData.dataEntrega}
@@ -278,9 +334,13 @@ export default function PedidoForm({ open, onClose, pedidoCompra })
             <div style={{ height: 400, width: '100%', marginTop: '16px' }}>
                 <DataGrid
                     rows={itensPedido}
+                    editMode="row"
                     columns={columns}
                     pageSize={5}
-                    onEditCellChangeCommitted={OnItemChange}
+                    onEditCellChangeCommitted={(params) =>
+                    {
+                        OnItemChange(params);
+                    }}
                     checkboxSelection={true}
                     onRowSelectionModelChange={(newRowSelectionModel) =>
                     {

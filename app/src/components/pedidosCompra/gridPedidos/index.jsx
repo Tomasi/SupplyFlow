@@ -2,6 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import PedidoForm from '../pedidoForm/index';
 
+const formatDate = (date) =>
+{
+    const parsedDate = new Date(date);
+    return parsedDate.toLocaleDateString('pt-BR')
+};
+
+const formatMoeda = (preco) =>
+{
+    const formatter = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+    });
+
+    return formatter.format(preco);
+}
+
+
 const columns = [
     {
         field: 'pedido',
@@ -16,23 +33,55 @@ const columns = [
     },
     {
         field: 'precoTotal',
-        headerName: 'Valor Total',
+        headerName: 'Preço Total',
         width: 300,
+        renderCell: (params) =>
+        {
+            return (
+                <div>
+                    {formatMoeda(params.value)}
+                </div>
+            )
+        }
     },
     {
         field: "dataPedido",
         headerName: "Cadastro",
-        width: 150
+        width: 150,
+        renderCell: (params) =>
+        {
+            return (
+                <div>
+                    {formatDate(params.value)}
+                </div>
+            );
+        },
     },
     {
         field: "dataAprovacao",
         headerName: "Aprovação",
-        width: 150
+        width: 150,
+        renderCell: (params) =>
+        {
+            return (
+                <div>
+                    {formatDate(params.value)}
+                </div>
+            );
+        },
     },
     {
         field: "dataEntrega",
         headerName: "Entrega",
-        width: 150
+        width: 150,
+        renderCell: (params) =>
+        {
+            return (
+                <div>
+                    {formatDate(params.value)}
+                </div>
+            );
+        },
     },
     {
         field: "situacao",
