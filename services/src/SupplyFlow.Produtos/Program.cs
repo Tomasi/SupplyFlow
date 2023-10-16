@@ -1,10 +1,20 @@
 using SupplyFlow.Common.MongoDB;
 using SupplyFlow.Common.MassTransit;
+using SupplyFlow.Common;
 using SupplyFlow.Common.Entities;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMongo().AddMongoRepository<Fornecedor>("Fornecedores").AddMassTransitWithRabbitMq();
+builder.Services.AddMongo().
+AddMongoRepository<Produto>("Produtos").
+AddMassTransitWithRabbitMq().
+AddScoped<IRepository<Fornecedor>>(provider =>
+{
+    var database = provider.GetRequiredService<IMongoDatabase>();
+    return new MongoRepository<Fornecedor>(database, "Fornecedores");
+});
+
 builder.Services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;
@@ -20,7 +30,6 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
     );
 });
-
 
 var app = builder.Build();
 

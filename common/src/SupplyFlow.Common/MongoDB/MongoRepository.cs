@@ -1,5 +1,4 @@
 
-using System.ComponentModel;
 using System.Linq.Expressions;
 using MongoDB.Driver;
 
@@ -41,32 +40,28 @@ public class MongoRepository<T> : IRepository<T> where T : IEntity
         await _dbCollection.DeleteOneAsync(filter);
     }
 
-    public async Task<IReadOnlyCollection<TEntity>> GetAllAsync<TEntity>()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
         IEnumerable<T> result = await _dbCollection.Find(filterBuilder.Empty).ToListAsync();
-        IReadOnlyCollection<TEntity> entidades = result.Select(item => (TEntity)Convert.ChangeType(item, typeof(TEntity))).ToList().AsReadOnly();
-        return entidades;
+        return result;
     }
 
-    public async Task<IReadOnlyCollection<TEntity>> GetAllAsync<TEntity>(Expression<Func<T, bool>> filter)
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter)
     {
         IEnumerable<T> result = await _dbCollection.Find(filter).ToListAsync();
-        IReadOnlyCollection<TEntity> entidades = (IReadOnlyCollection<TEntity>)Convert.ChangeType(result, typeof(IReadOnlyCollection<IEntity>));
-        return entidades;
+        return result;
     }
 
-    public async Task<TEntity> GetAsync<TEntity>(Guid id)
+    public async Task<T> GetAsync(Guid id)
     {
         FilterDefinition<T> filter = filterBuilder.Eq(x => x.Id, id);
         T result = await _dbCollection.Find(filter).FirstOrDefaultAsync();
-        TEntity entity = (TEntity)Convert.ChangeType(result, typeof(TEntity));
-        return entity;
+        return result;
     }
 
-    public async Task<TEntity> GetAsync<TEntity>(Expression<Func<T, bool>> filter)
+    public async Task<T> GetAsync(Expression<Func<T, bool>> filter)
     {
         T result = await _dbCollection.Find(filter).FirstOrDefaultAsync();
-        TEntity entity = (TEntity)Convert.ChangeType(result, typeof(TEntity));
-        return entity;
+        return result;
     }
 }

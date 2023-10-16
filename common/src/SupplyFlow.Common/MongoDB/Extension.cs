@@ -4,7 +4,6 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
-using SupplyFlow.Common.Entities;
 using SupplyFlow.Common.Settings;
 
 namespace SupplyFlow.Common.MongoDB;
@@ -16,12 +15,6 @@ public static class Extensions
         BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
         BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
         BsonSerializer.RegisterSerializer(new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.FullName.StartsWith("SupplyFlow")));
-
-        BsonClassMap.RegisterClassMap<PedidoCompra>(cm =>
-        {
-            cm.AutoMap();
-            cm.SetDiscriminator("PedidoCompra");
-        });
 
         services.AddSingleton(serviceProvider =>
         {

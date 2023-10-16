@@ -1,11 +1,25 @@
 using SupplyFlow.Common.MongoDB;
 using SupplyFlow.Common.MassTransit;
 using SupplyFlow.Common;
+using SupplyFlow.Common.Entities;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddMongo().AddMongoRepository<IEntity>("PedidosCompra").AddMassTransitWithRabbitMq();
+builder.Services.AddMongo().
+AddMongoRepository<PedidoCompra>("PedidosCompra").
+AddMassTransitWithRabbitMq().
+AddScoped<IRepository<Produto>>(provider =>
+{
+    var database = provider.GetRequiredService<IMongoDatabase>();
+    return new MongoRepository<Produto>(database, "Produtos");
+}).
+AddScoped<IRepository<Fornecedor>>(provider =>
+{
+    var database = provider.GetRequiredService<IMongoDatabase>();
+    return new MongoRepository<Fornecedor>(database, "Fornecedores");
+});
+
 builder.Services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;

@@ -19,14 +19,14 @@ namespace SupplyFlow.Common.Entities
                 return Itens == null ? 0 : Itens.Sum(item => item.PrecoTotal);
             }
         }
-        public EnumSituacao SituacaoPedido { get; set; }
+        public EnumSituacaoPedido SituacaoPedido { get; set; }
         public string? Observacao { get; set; }
         public List<ItemPedido>? Itens { get; set; }
         public Fornecedor? Fornecedor { get; set; }
 
     }
 
-    public enum EnumSituacao
+    public enum EnumSituacaoPedido
     {
         [Description("Pendente")]
         Pendente = 1,

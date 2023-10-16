@@ -13,11 +13,15 @@ namespace SupplyFlow.Service.PedidosCompra.Controllers;
 public class PedidosCompraController : ControllerBase
 {
 
-    private readonly IRepository<IEntity> _entityRepository;
+    private readonly IRepository<PedidoCompra> _entityRepository;
+    private readonly IRepository<Produto> _entityRepositoryProduto;
+    private readonly IRepository<Fornecedor> _entityRepositoryFornecedores;
     private readonly IPublishEndpoint _publishEndpoint;
-    public PedidosCompraController(IRepository<IEntity> entityRepository, IPublishEndpoint publishEndpoint)
+    public PedidosCompraController(IRepository<PedidoCompra> entityRepository, IRepository<Produto> entityRepositoryProdutos, IRepository<Fornecedor> entityRepositoryFornecedores, IPublishEndpoint publishEndpoint)
     {
         this._entityRepository = entityRepository;
+        this._entityRepositoryProduto = entityRepositoryProdutos;
+        this._entityRepositoryFornecedores = entityRepositoryFornecedores;
         this._publishEndpoint = publishEndpoint;
     }
 
@@ -25,21 +29,25 @@ public class PedidosCompraController : ControllerBase
     public async Task<ActionResult<PedidoCompra>> PostAsync(CreatePedidoCompraDto pedidoCompraDto)
     {
 
-        var chavesItens = pedidoCompraDto.Itens.Select(item => item.Id);
-        var itens = pedidoCompraDto.Itens.Select(item => item.AsItemPedido());
+        var chavesItens = pedidoCompraDto.Itens.Select(item => item.ProdutoId);
+        var produtos = (await _entityRepositoryProduto.GetAllAsync(produto => chavesItens.Contains(produto.Id)))?.ToDictionary(produto => produto.Id);
 
-        foreach (var item in itens)
+        if (produtos == null || !produtos.Any())
+            return BadRequest();
+
+        var itensPedido = new List<ItemPedido>();
+        foreach (var item in pedidoCompraDto.Itens)
         {
-            item.Produto = await _entityRepository.GetAsync<Produto>(item.Id);
+            itensPedido.Add(item.AsItemPedido(produtos[item.ProdutoId]));
         }
 
         PedidoCompra pedido = new()
         {
             Id = Guid.NewGuid(),
             DataPedido = DateOnly.FromDateTime(DateTime.Now),
-            Fornecedor = await _entityRepository.GetAsync<Fornecedor>(pedidoCompraDto.Fornecedor),
-            Itens = itens.ToList(),
-            SituacaoPedido = EnumSituacao.Pendente,
+            Fornecedor = await _entityRepositoryFornecedores.GetAsync(pedidoCompraDto.Fornecedor),
+            Itens = itensPedido.ToList(),
+            SituacaoPedido = EnumSituacaoPedido.Pendente,
             Observacao = pedidoCompraDto.Observacao
         };
 
@@ -48,19 +56,27 @@ public class PedidosCompraController : ControllerBase
         return CreatedAtAction(nameof(GetByIdAsync), new { id = pedido.Id }, pedido);
     }
 
-    [HttpPut]
-    public async Task<ActionResult> PutAsync(UpdatePedidoCompraDto pedidoCompraDto)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> PutAsync(Guid id, [FromBody] UpdatePedidoCompraDto pedidoCompraDto)
     {
-        var pedido = await _entityRepository.GetAsync<PedidoCompra>(pedidoCompraDto.Id);
+        var pedido = await _entityRepository.GetAsync(id);
+        var chavesItens = pedidoCompraDto.Itens.Select(item => item.ProdutoId);
+        var produtos = (await _entityRepositoryProduto.GetAllAsync(produto => chavesItens.Contains(produto.Id)))?.ToDictionary(produto => produto.Id);
 
         if (pedido == null)
             return BadRequest();
 
-        var chavesItens = pedidoCompraDto.Itens.Select(item => item.Id);
-        var itens = await _entityRepository.GetAllAsync<ItemPedido>(item => chavesItens.Contains(item.Id));
+        if (produtos == null || !produtos.Any())
+            return BadRequest();
 
-        pedido.Itens = itens.ToList();
-        pedido.Fornecedor = await _entityRepository.GetAsync<Fornecedor>(pedidoCompraDto.Fornecedor);
+        var itensPedido = new List<ItemPedido>();
+        foreach (var item in pedidoCompraDto.Itens)
+        {
+            itensPedido.Add(item.AsItemPedido(produtos[item.ProdutoId]));
+        }
+
+        pedido.Itens = itensPedido;
+        pedido.Fornecedor = await _entityRepositoryFornecedores.GetAsync(pedidoCompraDto.Fornecedor);
         pedido.SituacaoPedido = pedidoCompraDto.Situacao;
         pedido.Observacao = pedidoCompraDto.Observacao;
 
@@ -68,10 +84,10 @@ public class PedidosCompraController : ControllerBase
         return Ok();
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult> AlterarStatusAsync(Guid id, AlterarSituacaoDto aprovarPedido)
+    [HttpPut("alterarStatus/{id}")]
+    public async Task<ActionResult> AlterarStatusAsync(Guid id, [FromBody] AlterarSituacaoDto aprovarPedido)
     {
-        var pedido = await _entityRepository.GetAsync<PedidoCompra>(id);
+        var pedido = await _entityRepository.GetAsync(id);
 
         if (pedido == null)
             return BadRequest();
@@ -89,15 +105,37 @@ public class PedidosCompraController : ControllerBase
             return BadRequest();
         }
 
-        var pedido = await _entityRepository.GetAsync<PedidoCompra>(id.GetValueOrDefault());
-        return Ok(pedido.AsDto());
+        var pedido = await _entityRepository.GetAsync(id.GetValueOrDefault());
+        var chavesItens = pedido.Itens?.Select(item => item.IdProduto);
+        if (pedido.Itens == null || chavesItens == null || !chavesItens.Any())
+            return BadRequest();
+
+        var produtos = (await _entityRepositoryProduto.GetAllAsync(produto => chavesItens.Contains(produto.Id))).ToDictionary(produto => produto.Id);
+        var itensPedido = new List<ItemPedidoDto>();
+        foreach (var itemPedido in pedido.Itens)
+        {
+            var produto = produtos[itemPedido.IdProduto.GetValueOrDefault()];
+            var item = itemPedido.AsDto(produto);
+            itensPedido.Add(item);
+        }
+
+        return Ok(pedido.AsDto(itensPedido));
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PedidoDto>>> GetAllAsync()
     {
-        var pedidos = await _entityRepository.GetAllAsync<PedidoCompra>();
-        return Ok(pedidos?.Select(pedido => pedido.AsDto()));
+        var pedidos = await _entityRepository.GetAllAsync();
+        var produtos = (await _entityRepositoryProduto.GetAllAsync()).ToDictionary(produto => produto.Id);
+        return Ok(pedidos?.Select(pedido =>
+        {
+            var itensPedido = new List<ItemPedidoDto>();
+            foreach (var item in pedido.Itens)
+            {
+                var itemPedido = item.AsDto(produtos[item.Id]);
+                itensPedido.Add(itemPedido);
+            }
+            return pedido.AsDto(itensPedido);
+        }));
     }
-
 }
