@@ -10,6 +10,15 @@ import Slide from '@mui/material/Slide';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Grid } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 import
 {
     GridRowModes,
@@ -17,8 +26,6 @@ import
     GridActionsCellItem,
     GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import { Grid, TextField, Autocomplete } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 
 const Transition = React.forwardRef(function Transition(props, ref)
 {
@@ -29,8 +36,23 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 {
 
     const [itensPedido, setItemData] = useState([]);
+    const [fornecedores, setFornecedores] = useState([]);
     const [itemModesModel, setItemModesModel] = React.useState({});
-    const [fornecedores, setFornecedor] = useState([]);
+    const [produtosFornecedor, setProdutosFornecedor] = useState([]);
+    const [formData, setFormData] = useState({
+        fornecedor: '',
+        dataEntrega: '',
+        situacao: '',
+        observacao: '',
+    });
+    const situacoes = ['Pendente', 'Aprovado', 'Em trânsito', 'Entregue', 'Reprovado'];
+    const situacaoMap = {
+        1: 'Pendente',
+        2: 'Aprovado',
+        3: 'Em Trânsito',
+        4: 'Entregue',
+        5: 'Reprovado',
+    };
     const formatMoeda = (preco) =>
     {
         const formatter = new Intl.NumberFormat('pt-BR', {
@@ -40,21 +62,6 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 
         return formatter.format(preco);
     }
-    const [formData, setFormData] = useState({
-        fornecedor: '',
-        dataEntrega: '',
-        situacao: '',
-        observacao: '',
-    });
-
-    const situacoes = ['Pendente', 'Aprovado', 'Em trânsito', 'Entregue'];
-    const situacaoMap = {
-        1: 'Pendente',
-        2: 'Aprovado',
-        3: 'Em Trânsito',
-        4: 'Entregue',
-        5: 'Reprovado',
-    };
 
     useEffect(() =>
     {
@@ -64,18 +71,18 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
         {
             if (!response.ok)
             {
-                console.error('Erro ao buscar dados dos fornecedores:', error);
+                console.error('Falha na requisição de fornecedores', error);
             }
             return response.json();
         }).then((data) =>
         {
-            if (!data.length === 0)
+            if (!data.length == 0)
             {
-                const fornecedores = data.map(fornecedor => ({
+                const fornecedoresMapeados = data.map(fornecedor => ({
                     id: fornecedor.id,
-                    descricao: fornecedor.NomeFornecedor
+                    descricao: fornecedor.nomeFornecedor
                 }));
-                setFornecedor(fornecedores);
+                setFornecedores(fornecedoresMapeados);
             }
         }).catch((error) =>
         {
@@ -91,25 +98,71 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                 situacao: situacaoMap[pedidoCompra.situacao] || '',
                 observacao: pedidoCompra.observacao || '',
             };
+
             setFormData(pedidoCompraWithDefaults);
             if (pedidoCompra.itens && pedidoCompra.itens.length > 0)
             {
                 setItemData(pedidoCompra.itens);
             }
+
+            fetch("http://localhost:5118/produtos", {
+                method: 'GET'
+            }).then((response) =>
+            {
+                if (!response.ok)
+                {
+                    console.error("Falha na requisição dos produtos", error)
+                }
+
+                return response.json();
+            }).then((data) =>
+            {
+                if (!data.length == 0)
+                {
+                    const produtos = data.map()
+                    setProdutosFornecedor(produtos);
+                }
+            }).catch((error) =>
+            {
+                console.error("Erro ao buscar os produtos do fornecedor", error)
+            });
         }
     }, [pedidoCompra]);
 
     function criaPedido()
     {
-        const url = "http://localhost:5050"
+        const url = "http://localhost:5050/pedidosCompra";
         const pedido = {
-            fornecedor: formData.fornecedor,
-            dataEntrega: formData.dataEntrega,
-            situacao: formData.situacao,
-            observacao: formData.observacao,
-            itens: itensPedido,
-        }
-        console.log(pedido)
+            itens: [
+                {
+                    produtoId: "3d43e4aa-0fe4-4f61-81b0-01911cdde5d7",
+                    quantidade: "2"
+                }
+            ],
+            fornecedor: "3c802510-4c3f-4df5-9a5d-d9df281e53f8",
+            observacao: "teste"
+        };
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(pedido),
+        }).then((response) =>
+        {
+            console.log(response)
+            if (!response.ok)
+            {
+                throw new Error("Erro na requisição POST");
+            }
+            return response.json();
+        }).then((data) =>
+        {
+            console.log("Pedido criado com sucesso:", data);
+        }).catch((error) =>
+        {
+            console.error("Erro na requisição POST:", error);
+        });
     }
 
     function atualizaPedido()
@@ -129,7 +182,6 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             situacao: 1,
         }
 
-        console.log(pedido)
         fetch("http://localhost:5050/pedidosCompra", {
             method: "PUT",
             body: JSON.stringify(pedido),
@@ -150,22 +202,6 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             console.error("Erro na requisição PUT:", error);
         });
     }
-
-    const onFormChange = (e) =>
-    {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const onFornecedorChange = (newValue) =>
-    {
-        setItemData({});
-        setFornecedor(newValue);
-        onFormChange({ target: { name: 'Fornecedor', value: newValue } });
-    };
 
     const onSubmit = () =>
     {
@@ -280,20 +316,16 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             isNew: true
         };
         setItemData([...itensPedido, newItem]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
-    };
-
-    const onEditClick = (id) => () =>
-    {
-        setItemModesModel({ ...itemModesModel, [id]: { mode: GridRowModes.Edit } });
     };
 
     const onSaveClick = (id) => () =>
     {
         setItemModesModel({ ...itemModesModel, [id]: { mode: GridRowModes.View } });
+    };
+
+    const onEditClick = (id) => () =>
+    {
+        setItemModesModel({ ...itemModesModel, [id]: { mode: GridRowModes.Edit } });
     };
 
     const onDeleteClick = (id) => () =>
@@ -366,37 +398,46 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                     </Button>
                 </Toolbar>
             </AppBar>
-            <Grid container spacing={2} sx={{ p: 2 }}>
+            <Grid container spacing={1} sx={{ p: 2 }}>
                 <Grid item xs={4} sm={4}>
                     <Autocomplete
                         options={fornecedores}
+                        getOptionLabel={(option) => option.descricao}
                         value={formData.fornecedor || null}
-                        onChange={onFornecedorChange}
+                        onChange={(event, newValue) =>
+                        {
+                            setItemData([]);
+                            setFormData({
+                                ...formData,
+                                fornecedor: newValue,
+                            });
+                        }}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                fullWidth
                                 label="Fornecedor"
-                                name="Fornecedor"
-                                variant="outlined"
                             />
                         )}
                     />
                 </Grid>
-
                 <Grid item xs={4} sm={4}>
-                    <TextField
-                        fullWidth
-                        label="Entrega"
-                        name="DataEntrega"
-                        type="date"
-                        value={formData.dataEntrega}
-                        onChange={onFormChange}
-                        variant="outlined"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+                        <DatePicker
+                            label="Entrega"
+                            name="dataEntrega"
+                            valueType="date"
+                            value={dayjs(formData.dataEntrega)}
+                            onChange={(value) =>
+                            {
+                                const formattedDate = value.format("DD/MM/YYYY");
+                                setFormData({
+                                    ...formData,
+                                    dataEntrega: formattedDate,
+                                });
+                                console.log(formData)
+                            }}
+                        />
+                    </LocalizationProvider>
                 </Grid>
                 <Grid item xs={4} sm={4}>
                     <Autocomplete
@@ -404,14 +445,17 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                         value={formData.situacao || null}
                         onChange={(event, newValue) =>
                         {
-                            onFormChange({ target: { name: 'Situacao', value: newValue } });
+                            setFormData({
+                                ...formData,
+                                situacao: newValue
+                            })
                         }}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
                                 fullWidth
                                 label="Situação"
-                                name="Situacao"
+                                name="situacao"
                                 variant="outlined"
                             />
                         )}
@@ -420,13 +464,18 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
-                        label="Observações"
-                        name="Observacao"
+                        name="observacao"
                         multiline
                         rows={4}
                         value={formData.observacao}
-                        onChange={onFormChange}
                         variant="outlined"
+                        onChange={(event, newValue) =>
+                        {
+                            setFormData({
+                                ...formData,
+                                observacao: newValue
+                            });
+                        }}
                     />
                 </Grid>
                 <Grid item xs={12}>

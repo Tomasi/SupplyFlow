@@ -33,7 +33,7 @@ public class PedidosCompraController : ControllerBase
         var produtos = (await _entityRepositoryProduto.GetAllAsync(produto => chavesItens.Contains(produto.Id)))?.ToDictionary(produto => produto.Id);
 
         if (produtos == null || !produtos.Any())
-            return BadRequest();
+            return BadRequest("Produtos não cadastrados");
 
         var itensPedido = new List<ItemPedido>();
         foreach (var item in pedidoCompraDto.Itens)
