@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import ProdutoSelect from '../produtos';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -25,6 +26,7 @@ import
     DataGrid,
     GridActionsCellItem,
     GridRowEditStopReasons,
+    gridColumnsTotalWidthSelector,
 } from '@mui/x-data-grid';
 
 const Transition = React.forwardRef(function Transition(props, ref)
@@ -34,17 +36,18 @@ const Transition = React.forwardRef(function Transition(props, ref)
 
 export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 {
-
     const [itensPedido, setItemData] = useState([]);
     const [fornecedores, setFornecedores] = useState([]);
-    const [itemModesModel, setItemModesModel] = React.useState({});
-    const [produtosFornecedor, setProdutosFornecedor] = useState([]);
+    const [itemModesModel, setItemModesModel] = useState({});
+    const [isFormProdutosOpen, setIsFormProdutosOpen] = useState(false);
+    const [novoProduto, setNovoProduto] = useState({});
     const [formData, setFormData] = useState({
         fornecedor: '',
         dataEntrega: '',
         situacao: '',
         observacao: '',
     });
+
     const situacoes = ['Pendente', 'Aprovado', 'Em trânsito', 'Entregue', 'Reprovado'];
     const situacaoMap = {
         1: 'Pendente',
@@ -53,6 +56,39 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
         4: 'Entregue',
         5: 'Reprovado',
     };
+
+    const onProdutoSelect = (produtoSelecionado) =>
+    {
+        setNovoProduto(produtoSelecionado);
+    };
+
+    const onCancel = () =>
+    {
+        setNovoProduto({})
+        setIsFormProdutosOpen(false)
+    }
+
+    const onCloseFormProdutos = () =>
+    {
+        setIsFormProdutosOpen(false);
+        if (!novoProduto || Object.keys(novoProduto).length === 0)
+        {
+            console.log("Produto não informado");
+            return;
+        }
+
+        const newItem = {
+            id: novoProduto.id,
+            codigoProduto: novoProduto.codigoProduto,
+            descricaoProduto: novoProduto.descricaoProduto,
+            precoUnitario: novoProduto.precoUnitario,
+            quantidade: 0,
+            precoTotal: 0,
+            isNew: true,
+        };
+        setItemData([...itensPedido, newItem]);
+    };
+
     const formatMoeda = (preco) =>
     {
         const formatter = new Intl.NumberFormat('pt-BR', {
@@ -104,28 +140,6 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             {
                 setItemData(pedidoCompra.itens);
             }
-
-            fetch("http://localhost:5118/produtos", {
-                method: 'GET'
-            }).then((response) =>
-            {
-                if (!response.ok)
-                {
-                    console.error("Falha na requisição dos produtos", error)
-                }
-
-                return response.json();
-            }).then((data) =>
-            {
-                if (!data.length == 0)
-                {
-                    const produtos = data.map()
-                    setProdutosFornecedor(produtos);
-                }
-            }).catch((error) =>
-            {
-                console.error("Erro ao buscar os produtos do fornecedor", error)
-            });
         }
     }, [pedidoCompra]);
 
@@ -133,15 +147,17 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
     {
         const url = "http://localhost:5050/pedidosCompra";
         const pedido = {
-            itens: [
-                {
-                    produtoId: "3d43e4aa-0fe4-4f61-81b0-01911cdde5d7",
-                    quantidade: "2"
-                }
-            ],
-            fornecedor: "3c802510-4c3f-4df5-9a5d-d9df281e53f8",
-            observacao: "teste"
+            itens: itensPedido.map(item =>
+            ({
+                produtoId: item.id,
+                quantidade: item.quantidade
+            })),
+            fornecedor: formData.fornecedor.id,
+            observacao: "Teste"
         };
+
+        console.log("Json", JSON.stringify(pedido))
+
         fetch(url, {
             method: 'POST',
             headers: {
@@ -150,10 +166,9 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             body: JSON.stringify(pedido),
         }).then((response) =>
         {
-            console.log(response)
             if (!response.ok)
             {
-                throw new Error("Erro na requisição POST");
+                console.error("Erro na requisição", response)
             }
             return response.json();
         }).then((data) =>
@@ -173,6 +188,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
         {
             itens.push({ id: item.id, quantidade: item.quantidade });
         });
+
         const pedido = {
             id: pedidoCompra.id,
             itens: itens,
@@ -220,7 +236,6 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             field: 'codigoProduto',
             headerName: 'Código do Produto',
             width: 500,
-            editable: true
         },
         {
             field: 'descricaoProduto',
@@ -306,16 +321,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 
     const onAddItem = () =>
     {
-        const newItem = {
-            id: uuidv4(),
-            codigoProduto: '',
-            descricaoProduto: '',
-            quantidade: 0,
-            precoUnitario: 0,
-            precoTotal: 0,
-            isNew: true
-        };
-        setItemData([...itensPedido, newItem]);
+        setIsFormProdutosOpen(true);
     };
 
     const onSaveClick = (id) => () =>
@@ -497,6 +503,9 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                     onProcessRowUpdateError={OnProcessRowUpdateError}
                 />
             </div>
+            {isFormProdutosOpen && (
+                <ProdutoSelect open={isFormProdutosOpen} onClose={onCloseFormProdutos} onCancel={onCancel} fornecedor={formData.fornecedor} onProdutoSelect={onProdutoSelect} />
+            )}
         </Dialog>
     );
 }

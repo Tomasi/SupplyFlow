@@ -29,11 +29,11 @@ public class PedidosCompraController : ControllerBase
     public async Task<ActionResult<PedidoCompra>> PostAsync(CreatePedidoCompraDto pedidoCompraDto)
     {
 
-        var chavesItens = pedidoCompraDto.Itens.Select(item => item.ProdutoId);
+        var chavesItens = pedidoCompraDto.Itens.Select(item => item.ProdutoId).ToArray();
         var produtos = (await _entityRepositoryProduto.GetAllAsync(produto => chavesItens.Contains(produto.Id)))?.ToDictionary(produto => produto.Id);
 
         if (produtos == null || !produtos.Any())
-            return BadRequest("Produtos não cadastrados");
+            return BadRequest();
 
         var itensPedido = new List<ItemPedido>();
         foreach (var item in pedidoCompraDto.Itens)
@@ -132,7 +132,7 @@ public class PedidosCompraController : ControllerBase
             var itensPedido = new List<ItemPedidoDto>();
             foreach (var item in pedido.Itens)
             {
-                var itemPedido = item.AsDto(produtos[item.Id]);
+                var itemPedido = item.AsDto(produtos[item.IdProduto.GetValueOrDefault()]);
                 itensPedido.Add(itemPedido);
             }
             return pedido.AsDto(itensPedido);

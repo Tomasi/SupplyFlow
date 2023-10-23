@@ -18,7 +18,6 @@ const formatMoeda = (preco) =>
     return formatter.format(preco);
 }
 
-
 const columns = [
     {
         field: 'pedido',
@@ -96,7 +95,7 @@ export default function GridPedidos()
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [selectedPedido, setSelectedPedido] = useState(null);
 
-    const OnCloseDialog = () =>
+    const onCloseDialog = () =>
     {
         setIsFormOpen(false);
     };
@@ -147,7 +146,7 @@ export default function GridPedidos()
                 onRowDoubleClick={OnRowDoubleClick}
             />
             {isFormOpen && (
-                <PedidoForm open={isFormOpen} onClose={OnCloseDialog} pedidoCompra={selectedPedido} />
+                <PedidoForm open={isFormOpen} onClose={onCloseDialog} pedidoCompra={selectedPedido} />
             )}
         </div>
     );
