@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridArrowUpwardIcon } from '@mui/x-data-grid';
+import { getFornecedores, getPedidosCompra } from '../../../services/supplyFlowApi';
 import PedidoForm from '../pedidoForm/index';
 
 const formatDate = (date) =>
@@ -29,6 +30,10 @@ const columns = [
         field: 'fornecedor',
         headerName: 'Fornecedor',
         width: 300,
+        renderCell: (params) =>
+        {
+            return params.value?.nomeFornecedor || params.value;
+        }
     },
     {
         field: 'precoTotal',
@@ -91,9 +96,43 @@ const columns = [
 
 export default function GridPedidos()
 {
-    const [rows, setRows] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [rows, setRows] = useState([]);
+    const [dicFornecedores, setFornecedores] = useState({})
     const [selectedPedido, setSelectedPedido] = useState(null);
+
+    useEffect(() =>
+    {
+        consultaFornecedores();
+        consultaPedidosCompra();
+    }, [isFormOpen]);
+
+    useEffect(() =>
+    {
+        consultaPedidosCompra();
+    }, [dicFornecedores])
+
+    async function consultaFornecedores()
+    {
+        const fornecedores = await getFornecedores();
+        const dicionarioFornecedores = {};
+
+        fornecedores.forEach((fornecedor) =>
+        {
+            dicionarioFornecedores[fornecedor.id] = fornecedor;
+        });
+        console.log(dicFornecedores)
+        setFornecedores(dicionarioFornecedores);
+    }
+
+    async function consultaPedidosCompra()
+    {
+        const pedidos = await getPedidosCompra();
+        setRows(pedidos.map((pedido) => ({
+            ...pedido,
+            fornecedor: dicFornecedores[pedido.fornecedor],
+        })));
+    }
 
     const onCloseDialog = () =>
     {
@@ -104,29 +143,14 @@ export default function GridPedidos()
     {
         const pedidoSelecionado = rows.find((row) => row.id === params.row.id);
         setSelectedPedido(pedidoSelecionado);
+        console.log("Pedido selecionado", pedidoSelecionado)
         setIsFormOpen(true);
     };
 
-    useEffect(() =>
+    if (!rows)
     {
-        fetch("http://localhost:5050/pedidosCompra", {
-            method: 'GET'
-        }).then((response) =>
-        {
-            console.log(response)
-            if (!response.ok)
-            {
-                throw new Error('Erro ao buscar dados de pedidos');
-            }
-            return response.json();
-        }).then((data) =>
-        {
-            setRows(data);
-        }).catch((error) =>
-        {
-            throw new Error('Erro ao buscar dados de pedidos: ', error);
-        });
-    }, []);
+        return <div>Consultando pedidos de compra...</div>;
+    }
 
     return (
         <div style={{ height: '100%', width: '100%' }}>

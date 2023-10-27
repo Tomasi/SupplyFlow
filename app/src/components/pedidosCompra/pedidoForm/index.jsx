@@ -7,17 +7,19 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import ProdutoSelect from '../produtos';
+import { v4 as uuidv4 } from 'uuid';
+import { getFornecedores, createPedidoCompra, atualizaPedidoCompra } from '../../../services/supplyFlowApi'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Grid } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import { formatMoeda } from '../../../helper/numberHelper'
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import
@@ -25,8 +27,7 @@ import
     GridRowModes,
     DataGrid,
     GridActionsCellItem,
-    GridRowEditStopReasons,
-    gridColumnsTotalWidthSelector,
+    GridRowEditStopReasons
 } from '@mui/x-data-grid';
 
 const Transition = React.forwardRef(function Transition(props, ref)
@@ -36,13 +37,12 @@ const Transition = React.forwardRef(function Transition(props, ref)
 
 export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 {
-    const [itensPedido, setItemData] = useState([]);
-    const [fornecedores, setFornecedores] = useState([]);
-    const [itemModesModel, setItemModesModel] = useState({});
     const [isFormProdutosOpen, setIsFormProdutosOpen] = useState(false);
-    const [novoProduto, setNovoProduto] = useState({});
+    const [fornecedores, setFornecedores] = useState([]);
+    const [itensPedido, setItemData] = useState([]);
+    const [rowModesModel, setItemModesModel] = useState({});
     const [formData, setFormData] = useState({
-        fornecedor: '',
+        fornecedor: {},
         dataEntrega: '',
         situacao: '',
         observacao: '',
@@ -57,28 +57,30 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
         5: 'Reprovado',
     };
 
-    const onProdutoSelect = (produtoSelecionado) =>
-    {
-        setNovoProduto(produtoSelecionado);
+    const situacaoMapDescricao = {
+        'Pendente': 1,
+        'Aprovado': 2,
+        'Em Trânsito': 3,
+        'Entregue': 4,
+        'Reprovado': 5,
     };
 
-    const onCancel = () =>
+    const onCancelFormProdutos = () =>
     {
-        setNovoProduto({})
         setIsFormProdutosOpen(false)
     }
 
-    const onCloseFormProdutos = () =>
+    const onCloseFormProdutos = (novoProduto) =>
     {
         setIsFormProdutosOpen(false);
         if (!novoProduto || Object.keys(novoProduto).length === 0)
         {
-            console.log("Produto não informado");
             return;
         }
 
         const newItem = {
-            id: novoProduto.id,
+            id: uuidv4(),
+            produtoId: novoProduto.id,
             codigoProduto: novoProduto.codigoProduto,
             descricaoProduto: novoProduto.descricaoProduto,
             precoUnitario: novoProduto.precoUnitario,
@@ -89,134 +91,71 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
         setItemData([...itensPedido, newItem]);
     };
 
-    const formatMoeda = (preco) =>
+    async function consultaFornecedores()
     {
-        const formatter = new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-        });
-
-        return formatter.format(preco);
+        const requisicaoResult = await getFornecedores();
+        setFornecedores(requisicaoResult);
     }
 
-    useEffect(() =>
+    function alimentaInformacoesPedidoCompra()
     {
-        fetch("http://localhost:5285/fornecedores", {
-            method: 'GET'
-        }).then((response) =>
-        {
-            if (!response.ok)
-            {
-                console.error('Falha na requisição de fornecedores', error);
-            }
-            return response.json();
-        }).then((data) =>
-        {
-            if (!data.length == 0)
-            {
-                const fornecedoresMapeados = data.map(fornecedor => ({
-                    id: fornecedor.id,
-                    descricao: fornecedor.nomeFornecedor
-                }));
-                setFornecedores(fornecedoresMapeados);
-            }
-        }).catch((error) =>
-        {
-            console.error('Erro ao buscar dados dos fornecedores:', error);
-        });
-
         if (pedidoCompra)
         {
+            console.log("Pedido de compra na abertura", pedidoCompra)
             const pedidoCompraWithDefaults = {
                 ...pedidoCompra,
-                fornecedor: pedidoCompra.fornecedor || '',
+                fornecedor: pedidoCompra.fornecedor,
                 dataEntrega: pedidoCompra.dataEntrega || '',
-                situacao: situacaoMap[pedidoCompra.situacao] || '',
                 observacao: pedidoCompra.observacao || '',
+                situacao: situacaoMap[pedidoCompra.situacao] || ''
             };
 
             setFormData(pedidoCompraWithDefaults);
-            if (pedidoCompra.itens && pedidoCompra.itens.length > 0)
+            if (pedidoCompra.itens.length > 0)
             {
                 setItemData(pedidoCompra.itens);
             }
         }
-    }, [pedidoCompra]);
+    }
+
+    useEffect(() =>
+    {
+        consultaFornecedores();
+        alimentaInformacoesPedidoCompra();
+    }, []);
 
     function criaPedido()
     {
-        const url = "http://localhost:5050/pedidosCompra";
         const pedido = {
             itens: itensPedido.map(item =>
             ({
-                produtoId: item.id,
+                produtoId: item.produtoId,
                 quantidade: item.quantidade
             })),
             fornecedor: formData.fornecedor.id,
-            observacao: "Teste"
+            observacao: formData.observacao
         };
-
-        console.log("Json", JSON.stringify(pedido))
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(pedido),
-        }).then((response) =>
-        {
-            if (!response.ok)
-            {
-                console.error("Erro na requisição", response)
-            }
-            return response.json();
-        }).then((data) =>
-        {
-            console.log("Pedido criado com sucesso:", data);
-        }).catch((error) =>
-        {
-            console.error("Erro na requisição POST:", error);
-        });
+        console.log("Pedido em gravação", pedido)
+        createPedidoCompra(pedido);
     }
 
     function atualizaPedido()
     {
-        var itens = [];
-
+        const itens = [];
         itensPedido.forEach((item) =>
         {
-            itens.push({ id: item.id, quantidade: item.quantidade });
+            itens.push({ produtoId: item.produtoId, quantidade: item.quantidade });
         });
 
         const pedido = {
-            id: pedidoCompra.id,
             itens: itens,
-            fornecedor: uuidv4(),
+            fornecedor: formData.fornecedor.id,
             observacao: formData.observacao,
             dataEntrega: formData.dataEntrega,
-            situacao: 1,
+            situacao: situacaoMapDescricao[formData.situacao],
         }
-
-        fetch("http://localhost:5050/pedidosCompra", {
-            method: "PUT",
-            body: JSON.stringify(pedido),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }).then((response) =>
-        {
-            if (!response.ok)
-            {
-                throw new Error("Erro na requisição PUT");
-            }
-            return response.json();
-        }).then((data) =>
-        {
-        }).catch((error) =>
-        {
-            console.error("Erro na requisição PUT:", error);
-        });
+        console.log("Pedido atualizado", pedido)
+        atualizaPedidoCompra(pedido, pedidoCompra.id);
     }
 
     const onSubmit = () =>
@@ -229,6 +168,61 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             atualizaPedido();
         }
         onClose();
+    };
+
+    const onAddItem = () =>
+    {
+        setIsFormProdutosOpen(true);
+    };
+
+    const onSaveClick = (id) => () =>
+    {
+        setItemModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    };
+
+    const onEditClick = (id) => () =>
+    {
+        setItemModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    };
+
+    const onDeleteClick = (id) => () =>
+    {
+        setItemData(itensPedido.filter((row) => row.id !== id));
+    };
+
+    const onRowModesModelChange = (newRowModesModel) =>
+    {
+        setItemModesModel(newRowModesModel);
+    };
+
+    const onRowEditStop = (params, event) =>
+    {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut)
+        {
+            event.defaultMuiPrevented = true;
+        }
+    };
+
+    const onProcessRowUpdate = (newRow) =>
+    {
+        const updatedRow = { ...newRow, isNew: false };
+        updatedRow.precoTotal = updatedRow.precoUnitario * updatedRow.quantidade
+        setItemData(itensPedido.map((row) => (row.id === newRow.id ? updatedRow : row)));
+        return updatedRow;
+    };
+
+    const onCancelClick = (id) => () =>
+    {
+        setItemModesModel({
+            ...rowModesModel,
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+
+        const editedRow = itensPedido.find((row) => row.id === id);
+        if (editedRow.isNew)
+        {
+            setItemData(itensPedido.filter((row) => row.id !== id));
+        }
     };
 
     const columns = [
@@ -278,7 +272,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             cellClassName: 'actions',
             getActions: ({ id }) =>
             {
-                const isInEditMode = itemModesModel[id]?.mode === GridRowModes.Edit;
+                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
                 if (isInEditMode)
                 {
                     return [
@@ -319,66 +313,6 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
         },
     ];
 
-    const onAddItem = () =>
-    {
-        setIsFormProdutosOpen(true);
-    };
-
-    const onSaveClick = (id) => () =>
-    {
-        setItemModesModel({ ...itemModesModel, [id]: { mode: GridRowModes.View } });
-    };
-
-    const onEditClick = (id) => () =>
-    {
-        setItemModesModel({ ...itemModesModel, [id]: { mode: GridRowModes.Edit } });
-    };
-
-    const onDeleteClick = (id) => () =>
-    {
-        setItemData(itensPedido.filter((row) => row.id !== id));
-    };
-
-    const onCancelClick = (id) => () =>
-    {
-        setItemModesModel({
-            ...itemModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true },
-        });
-
-        const editedRow = itensPedido.find((row) => row.id === id);
-        if (editedRow.isNew)
-        {
-            setItemData(itensPedido.filter((row) => row.id !== id));
-        }
-    };
-
-    const onRowEditStop = (params, event) =>
-    {
-        if (params.reason === GridRowEditStopReasons.rowFocusOut)
-        {
-            event.defaultMuiPrevented = true;
-        }
-    };
-
-    const onRowModesModelChange = (newRowModesModel) =>
-    {
-        setItemModesModel(newRowModesModel);
-    };
-
-    const onProcessRowUpdate = (newRow) =>
-    {
-        const updatedRow = { ...newRow, isNew: false };
-        updatedRow.precoTotal = updatedRow.precoUnitario * updatedRow.quantidade
-        setItemData(itensPedido.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
-    };
-
-    const OnProcessRowUpdateError = (error, details) =>
-    {
-        console.error('Erro ao processar atualização de linha:', error);
-    };
-
     return (
         <Dialog
             fullScreen
@@ -408,10 +342,11 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                 <Grid item xs={4} sm={4}>
                     <Autocomplete
                         options={fornecedores}
-                        getOptionLabel={(option) => option.descricao}
-                        value={formData.fornecedor || null}
+                        getOptionLabel={(option) => option.nomeFornecedor || ''}
+                        value={formData.fornecedor}
                         onChange={(event, newValue) =>
                         {
+                            console.log("Novo fornecedor", newValue)
                             setItemData([]);
                             setFormData({
                                 ...formData,
@@ -433,6 +368,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                             name="dataEntrega"
                             valueType="date"
                             value={dayjs(formData.dataEntrega)}
+                            sx={{ width: '100%' }}
                             onChange={(value) =>
                             {
                                 const formattedDate = value.format("DD/MM/YYYY");
@@ -451,6 +387,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                         value={formData.situacao || null}
                         onChange={(event, newValue) =>
                         {
+                            console.log("Situação:", newValue)
                             setFormData({
                                 ...formData,
                                 situacao: newValue
@@ -475,11 +412,11 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                         rows={4}
                         value={formData.observacao}
                         variant="outlined"
-                        onChange={(event, newValue) =>
+                        onChange={(event) =>
                         {
                             setFormData({
                                 ...formData,
-                                observacao: newValue
+                                observacao: event.target.value
                             });
                         }}
                     />
@@ -494,17 +431,16 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                 <DataGrid
                     rows={itensPedido}
                     columns={columns}
-                    rowModesModel={itemModesModel}
+                    rowModesModel={rowModesModel}
                     editMode="row"
                     pageSize={5}
                     onRowModesModelChange={onRowModesModelChange}
                     onRowEditStop={onRowEditStop}
                     processRowUpdate={onProcessRowUpdate}
-                    onProcessRowUpdateError={OnProcessRowUpdateError}
                 />
             </div>
             {isFormProdutosOpen && (
-                <ProdutoSelect open={isFormProdutosOpen} onClose={onCloseFormProdutos} onCancel={onCancel} fornecedor={formData.fornecedor} onProdutoSelect={onProdutoSelect} />
+                <ProdutoSelect open={isFormProdutosOpen} onClose={onCloseFormProdutos} onCancel={onCancelFormProdutos} />
             )}
         </Dialog>
     );

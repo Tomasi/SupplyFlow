@@ -12,7 +12,7 @@ public static class Extensions
         pedido.NumeroPedido,
         itensPedido.ToList(),
         pedido.DataPedido,
-        pedido.Fornecedor?.NomeFornecedor,
+        pedido.Fornecedor?.Id,
         pedido.SituacaoPedido,
         pedido.Observacao,
         pedido.DataAprovacao,
@@ -24,6 +24,7 @@ public static class Extensions
     {
         return new ItemPedidoDto(
         Id: itemPedido.Id,
+        ProdutoId: produto.Id,
         CodigoProduto: produto.CodigoProduto,
         DescricaoProduto: produto.Descricao,
         Quantidade: itemPedido.Quantidade,

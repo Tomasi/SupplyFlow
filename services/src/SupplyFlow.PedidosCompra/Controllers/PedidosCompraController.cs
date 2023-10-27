@@ -60,7 +60,7 @@ public class PedidosCompraController : ControllerBase
     public async Task<ActionResult> PutAsync(Guid id, [FromBody] UpdatePedidoCompraDto pedidoCompraDto)
     {
         var pedido = await _entityRepository.GetAsync(id);
-        var chavesItens = pedidoCompraDto.Itens.Select(item => item.ProdutoId);
+        var chavesItens = pedidoCompraDto.Itens.Select(item => item.ProdutoId).ToArray();
         var produtos = (await _entityRepositoryProduto.GetAllAsync(produto => chavesItens.Contains(produto.Id)))?.ToDictionary(produto => produto.Id);
 
         if (pedido == null)
