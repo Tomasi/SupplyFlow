@@ -5,6 +5,7 @@ using SupplyFlow.Contracts;
 using SupplyFlow.PedidosCompra;
 using SupplyFlow.Service.Dtos;
 using SupplyFlow.Common.Entities;
+using MassTransit.Initializers;
 
 namespace SupplyFlow.Service.PedidosCompra.Controllers;
 
@@ -47,7 +48,7 @@ public class PedidosCompraController : ControllerBase
             DataPedido = DateOnly.FromDateTime(DateTime.Now),
             Fornecedor = await _entityRepositoryFornecedores.GetAsync(pedidoCompraDto.Fornecedor),
             Itens = itensPedido.ToList(),
-            SituacaoPedido = EnumSituacaoPedido.Pendente,
+            SituacaoPedido = SituacaoPedido.Pendente,
             Observacao = pedidoCompraDto.Observacao
         };
 
@@ -120,6 +121,23 @@ public class PedidosCompraController : ControllerBase
         }
 
         return Ok(pedido.AsDto(itensPedido));
+    }
+
+    [HttpGet("{situacao}")]
+    public async Task<ActionResult<IEnumerable<PedidoDto>>> GetPedidosBySituacao(SituacaoPedido situacaoPedido)
+    {
+        var pedidos = await _entityRepository.GetAllAsync(pedido => pedido.SituacaoPedido == situacaoPedido);
+        var produtos = (await _entityRepositoryProduto.GetAllAsync()).ToDictionary(produto => produto.Id);
+        return Ok(pedidos?.Select(pedido =>
+        {
+            var itensPedido = new List<ItemPedidoDto>();
+            foreach (var item in pedido.Itens)
+            {
+                var itemPedido = item.AsDto(produtos[item.IdProduto.GetValueOrDefault()]);
+                itensPedido.Add(itemPedido);
+            }
+            return pedido.AsDto(itensPedido);
+        }));
     }
 
     [HttpGet]

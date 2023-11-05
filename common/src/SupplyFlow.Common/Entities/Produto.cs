@@ -7,10 +7,10 @@ public class Produto : IEntity
     public string? Descricao { get; set; }
     public decimal PrecoUnitario { get; set; }
     public Fornecedor? Fornecedor { get; set; }
-    public EnumSituacaoProduto Situacao { get; set; }
+    public SituacaoProduto Situacao { get; set; }
     public DateOnly? Validade { get; set; }
 }
-public enum EnumSituacaoProduto
+public enum SituacaoProduto
 {
     Ativo = 1,
     Cancelado = 2

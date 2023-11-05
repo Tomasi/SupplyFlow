@@ -27,7 +27,7 @@ public class FornecedorController : ControllerBase
             Id = Guid.NewGuid(),
             NomeFornecedor = fornecedorCompraDto.NomeFornecedor,
             PrazoEntrega = fornecedorCompraDto.PrazoEntrega,
-            Situacao = EnumSituacaoFornecedor.Ativo
+            Situacao = SituacaoFornecedor.Ativo
         };
 
         await _entityRepository.CreateAsync(fornecedor);

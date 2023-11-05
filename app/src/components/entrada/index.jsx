@@ -1,7 +1,5 @@
-const Entrada = () =>
+export default () =>
 {
-    return (
-        <div>Entrada</div>
-    )
+
 }
-export default Entrada
+

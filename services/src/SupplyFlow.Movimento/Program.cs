@@ -1,29 +1,25 @@
-using SupplyFlow.Common.MongoDB;
-using SupplyFlow.Common.MassTransit;
+using MongoDB.Driver;
 using SupplyFlow.Common;
 using SupplyFlow.Common.Entities;
-using MongoDB.Driver;
+using SupplyFlow.Common.MassTransit;
+using SupplyFlow.Common.MongoDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMongo().
-AddMongoRepository<PedidoCompra>("PedidosCompra").
+AddMongoRepository<Movimento>("Movimento").
 AddMassTransitWithRabbitMq().
 AddScoped<IRepository<Produto>>(provider =>
 {
     var database = provider.GetRequiredService<IMongoDatabase>();
     return new MongoRepository<Produto>(database, "Produtos");
-}).
-AddScoped<IRepository<Fornecedor>>(provider =>
-{
-    var database = provider.GetRequiredService<IMongoDatabase>();
-    return new MongoRepository<Fornecedor>(database, "Fornecedores");
 });
 
 builder.Services.AddControllers(options =>
 {
-    options.SuppressAsyncSuffixInActionNames = false;
+    options.SuppressAsyncSuffixInActionNames = true;
 });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@emotion/react';
 import { extractValidationProps } from '@mui/x-date-pickers/internals';
 import axios from 'axios';
 
@@ -21,7 +22,7 @@ export const getFornecedores = async () =>
 {
     try
     {
-        const response = await fornecedoresService.get('/fornecedores');
+        var response = await fornecedoresService.get('/fornecedores');
         return response.data;
     } catch (error)
     {
@@ -33,7 +34,7 @@ export const createPedidoCompra = async (pedidoCompra) =>
 {
     try
     {
-        const response = await pedidosCompraService.post('/pedidosCompra', pedidoCompra);
+        var response = await pedidosCompraService.post('/pedidosCompra', pedidoCompra);
         return response.data;
     } catch (error)
     {
@@ -45,10 +46,23 @@ export const getPedidosCompra = async () =>
 {
     try
     {
-        const response = await pedidosCompraService.get('/pedidosCompra');
+        var response = await pedidosCompraService.get('/pedidosCompra');
         return response.data;
     } catch (error)
     {
+        throw error;
+    }
+}
+
+export const getPedidosCompraAprovados = async (situacao) =>
+{
+    try
+    {
+        var response = await pedidosCompraService.get(`/pedidosCompra/${situacao}`);
+        return response.data;
+    } catch (error)
+    {
+        console.log(error)
         throw error;
     }
 }
@@ -57,8 +71,7 @@ export const atualizaPedidoCompra = async (pedidoCompra, id) =>
 {
     try
     {
-        console.log("Requisição...PUT")
-        const response = await pedidosCompraService.put(`/pedidosCompra/${id}`, pedidoCompra);
+        var response = await pedidosCompraService.put(`/pedidosCompra/${id}`, pedidoCompra);
         return response.data;
     } catch (error)
     {
@@ -71,7 +84,7 @@ export const getProdutos = async (produto) =>
 {
     try
     {
-        const response = await produtosService.get('/produtos');
+        var response = await produtosService.get('/produtos');
         return response.data;
     } catch (error)
     {

@@ -28,7 +28,7 @@ public class ProdutosController : ControllerBase
             CodigoProduto = produtoDto.CodigoProduto,
             Descricao = produtoDto.DescricaoProduto,
             PrecoUnitario = produtoDto.PrecoUnitario,
-            Situacao = EnumSituacaoProduto.Ativo,
+            Situacao = SituacaoProduto.Ativo,
             Validade = produtoDto.Validade
         };
 

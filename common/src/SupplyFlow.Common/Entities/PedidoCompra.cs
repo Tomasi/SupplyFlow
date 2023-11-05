@@ -1,10 +1,8 @@
 
 using System.ComponentModel;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace SupplyFlow.Common.Entities
 {
-    [BsonDiscriminator("PedidoCompra")]
     public class PedidoCompra : IEntity
     {
         public Guid Id { get; set; }
@@ -19,14 +17,14 @@ namespace SupplyFlow.Common.Entities
                 return Itens == null ? 0 : Itens.Sum(item => item.PrecoTotal);
             }
         }
-        public EnumSituacaoPedido SituacaoPedido { get; set; }
+        public SituacaoPedido SituacaoPedido { get; set; }
         public string? Observacao { get; set; }
         public List<ItemPedido>? Itens { get; set; }
         public Fornecedor? Fornecedor { get; set; }
 
     }
 
-    public enum EnumSituacaoPedido
+    public enum SituacaoPedido
     {
         [Description("Pendente")]
         Pendente = 1,
