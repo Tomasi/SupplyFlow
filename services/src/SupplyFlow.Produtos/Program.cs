@@ -1,8 +1,8 @@
 using SupplyFlow.Common.MongoDB;
 using SupplyFlow.Common.MassTransit;
 using SupplyFlow.Common;
-using SupplyFlow.Common.Entities;
 using MongoDB.Driver;
+using SupplyFlow.Common.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

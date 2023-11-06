@@ -23,6 +23,7 @@ public class MovimentoCreatedConsumers : IConsumer<MovimentoCreated>
     {
         var message = context.Message;
         var movimento = await _repositoryMovimento.GetAsync(message.Id);
+
         if (movimento == null)
             return;
 
@@ -40,7 +41,4 @@ public class MovimentoCreatedConsumers : IConsumer<MovimentoCreated>
         _movimentaEstoque.IncrementaEstoque(movimento, estoque);
         await _repositoryEstoque.UpdateAsync(estoque);
     }
-
-
-
 }

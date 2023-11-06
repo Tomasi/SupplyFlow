@@ -1,5 +1,3 @@
-import { ThemeProvider } from '@emotion/react';
-import { extractValidationProps } from '@mui/x-date-pickers/internals';
 import axios from 'axios';
 
 const fornecedoresUrl = "http://localhost:5285"
@@ -69,6 +67,8 @@ export const getPedidosCompraAprovados = async (situacao) =>
 
 export const atualizaPedidoCompra = async (pedidoCompra, id) =>
 {
+    console.log("Pedido compra", pedidoCompra)
+    console.log("ID", id)
     try
     {
         var response = await pedidosCompraService.put(`/pedidosCompra/${id}`, pedidoCompra);

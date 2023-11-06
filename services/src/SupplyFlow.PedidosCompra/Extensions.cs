@@ -1,7 +1,7 @@
 using SupplyFlow.Service.Dtos;
 using SupplyFlow.Common.Entities;
 
-namespace SupplyFlow.PedidosCompra;
+namespace SupplyFlow.Service.PedidosCompra;
 
 public static class Extensions
 {
@@ -12,7 +12,7 @@ public static class Extensions
         pedido.NumeroPedido,
         itensPedido.ToList(),
         pedido.DataPedido,
-        pedido.Fornecedor?.Id,
+        pedido.Fornecedor,
         pedido.SituacaoPedido,
         pedido.Observacao,
         pedido.DataAprovacao,
@@ -25,7 +25,7 @@ public static class Extensions
         return new ItemPedidoDto(
         Id: itemPedido.Id,
         ProdutoId: produto.Id,
-        CodigoProduto: produto.CodigoProduto,
+        CodigoProduto: produto.Codigo,
         DescricaoProduto: produto.Descricao,
         Quantidade: itemPedido.Quantidade,
         PrecoUnitario: produto.PrecoUnitario,
@@ -37,7 +37,7 @@ public static class Extensions
         return new ItemPedido()
         {
             Id = Guid.NewGuid(),
-            IdProduto = itemPedido.ProdutoId,
+            Produto = produto,
             Quantidade = itemPedido.Quantidade,
             PrecoUnitario = produto.PrecoUnitario,
             PrecoTotal = produto.PrecoUnitario * itemPedido.Quantidade

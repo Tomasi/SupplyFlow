@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid, GridArrowUpwardIcon } from '@mui/x-data-grid';
-import { getFornecedores, getPedidosCompra } from '../../../services/supplyFlowApi';
+import { DataGrid } from '@mui/x-data-grid';
+import { getPedidosCompra } from '../../../services/supplyFlowApi';
 import PedidoForm from '../pedidoForm/index';
 
 const formatDate = (date) =>
 {
+    if (!date)
+    {
+        return date
+    }
     const parsedDate = new Date(date);
-    return parsedDate.toLocaleDateString('pt-BR')
+    const year = parsedDate.getUTCFullYear();
+    const month = parsedDate.getUTCMonth() + 1;
+    const day = parsedDate.getUTCDate();
+    const formattedDate = new Date(Date.UTC(year, month - 1, day)).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+    return formattedDate;
+};
+
+const situacaoMap = {
+    1: 'Pendente',
+    2: 'Aprovado',
+    3: 'Reprovado',
 };
 
 const formatMoeda = (preco) =>
@@ -62,19 +76,6 @@ const columns = [
         },
     },
     {
-        field: "dataAprovacao",
-        headerName: "Aprovação",
-        width: 150,
-        renderCell: (params) =>
-        {
-            return (
-                <div>
-                    {formatDate(params.value)}
-                </div>
-            );
-        },
-    },
-    {
         field: "dataEntrega",
         headerName: "Entrega",
         width: 150,
@@ -88,9 +89,28 @@ const columns = [
         },
     },
     {
+        field: "dataAprovacao",
+        headerName: "Aprovação",
+        width: 150,
+        renderCell: (params) =>
+        {
+            return (
+                <div>
+                    {formatDate(params.value)}
+                </div>
+            );
+        },
+    },
+    {
         field: "situacao",
         headerName: "Situação",
-        width: 150
+        width: 150,
+        renderCell: (params) =>
+        {
+            return (<div>
+                {situacaoMap[params.value] || ''}
+            </div>)
+        }
     },
 ];
 
@@ -98,40 +118,17 @@ export default function GridPedidos()
 {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [rows, setRows] = useState([]);
-    const [dicFornecedores, setFornecedores] = useState({})
-    const [selectedPedido, setSelectedPedido] = useState(null);
+    const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
 
     useEffect(() =>
     {
-        consultaFornecedores();
         consultaPedidosCompra();
     }, [isFormOpen]);
-
-    useEffect(() =>
-    {
-        consultaPedidosCompra();
-    }, [dicFornecedores])
-
-    async function consultaFornecedores()
-    {
-        const fornecedores = await getFornecedores();
-        const dicionarioFornecedores = {};
-
-        fornecedores.forEach((fornecedor) =>
-        {
-            dicionarioFornecedores[fornecedor.id] = fornecedor;
-        });
-        console.log(dicFornecedores)
-        setFornecedores(dicionarioFornecedores);
-    }
 
     async function consultaPedidosCompra()
     {
         const pedidos = await getPedidosCompra();
-        setRows(pedidos.map((pedido) => ({
-            ...pedido,
-            fornecedor: dicFornecedores[pedido.fornecedor],
-        })));
+        setRows(pedidos);
     }
 
     const onCloseDialog = () =>
@@ -141,8 +138,8 @@ export default function GridPedidos()
 
     const OnRowDoubleClick = (params) =>
     {
-        const pedidoSelecionado = rows.find((row) => row.id === params.row.id);
-        setSelectedPedido(pedidoSelecionado);
+        var pedidoSelecionado = rows.find((row) => row.id === params.row.id);
+        setPedidoSelecionado(pedidoSelecionado);
         console.log("Pedido selecionado", pedidoSelecionado)
         setIsFormOpen(true);
     };
@@ -170,7 +167,7 @@ export default function GridPedidos()
                 onRowDoubleClick={OnRowDoubleClick}
             />
             {isFormOpen && (
-                <PedidoForm open={isFormOpen} onClose={onCloseDialog} pedidoCompra={selectedPedido} />
+                <PedidoForm open={isFormOpen} onClose={onCloseDialog} pedidoCompra={pedidoSelecionado} />
             )}
         </div>
     );

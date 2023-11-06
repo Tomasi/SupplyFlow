@@ -1,4 +1,3 @@
-
 namespace SupplyFlow.Common.Entities;
 
 public class Movimento : IEntity

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SupplyFlow.Common;
 using SupplyFlow.Common.Entities;
-using SupplyFlow.PedidosCompra;
 using SupplyFlow.Services.Dtos;
 
 namespace SupplyFlow.Services.Produtos.Controllers;
@@ -25,10 +24,10 @@ public class ProdutosController : ControllerBase
         Produto produto = new()
         {
             Id = Guid.NewGuid(),
-            CodigoProduto = produtoDto.CodigoProduto,
+            Codigo = produtoDto.CodigoProduto,
             Descricao = produtoDto.DescricaoProduto,
             PrecoUnitario = produtoDto.PrecoUnitario,
-            Situacao = SituacaoProduto.Ativo,
+            SituacaoProduto = SituacaoProduto.Ativo,
             Validade = produtoDto.Validade
         };
 
@@ -45,11 +44,11 @@ public class ProdutosController : ControllerBase
         if (produto == null)
             return BadRequest();
 
-        produto.CodigoProduto = produtoDto.CodigoProduto;
+        produto.Codigo = produtoDto.CodigoProduto;
         produto.Descricao = produtoDto.DescricaoProduto;
         produto.Fornecedor = await _entityRepositoryFornecedor.GetAsync(produtoDto.FornecedorId);
         produto.PrecoUnitario = produtoDto.PrecoUnitario;
-        produto.Situacao = produtoDto.SituacaoProduto;
+        produto.SituacaoProduto = produtoDto.SituacaoProduto;
         produto.Validade = produtoDto.Validade;
 
         await _entityRepository.UpdateAsync(produto);

@@ -2,10 +2,9 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using SupplyFlow.Common;
 using SupplyFlow.Contracts;
-using SupplyFlow.PedidosCompra;
 using SupplyFlow.Service.Dtos;
-using SupplyFlow.Common.Entities;
 using MassTransit.Initializers;
+using SupplyFlow.Common.Entities;
 
 namespace SupplyFlow.Service.PedidosCompra.Controllers;
 
@@ -29,7 +28,6 @@ public class PedidosCompraController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<PedidoCompra>> PostAsync(CreatePedidoCompraDto pedidoCompraDto)
     {
-
         var chavesItens = pedidoCompraDto.Itens.Select(item => item.ProdutoId).ToArray();
         var produtos = (await _entityRepositoryProduto.GetAllAsync(produto => chavesItens.Contains(produto.Id)))?.ToDictionary(produto => produto.Id);
 
@@ -45,10 +43,12 @@ public class PedidosCompraController : ControllerBase
         PedidoCompra pedido = new()
         {
             Id = Guid.NewGuid(),
+            NumeroPedido = (await _entityRepository.GetAllAsync()).Max(pedido => pedido.NumeroPedido) + 1,
             DataPedido = DateOnly.FromDateTime(DateTime.Now),
+            DataEntrega = pedidoCompraDto.DataEntrega,
             Fornecedor = await _entityRepositoryFornecedores.GetAsync(pedidoCompraDto.Fornecedor),
             Itens = itensPedido.ToList(),
-            SituacaoPedido = SituacaoPedido.Pendente,
+            SituacaoPedido = SituacaoPedidoCompra.Pendente,
             Observacao = pedidoCompraDto.Observacao
         };
 
@@ -80,6 +80,7 @@ public class PedidosCompraController : ControllerBase
         pedido.Fornecedor = await _entityRepositoryFornecedores.GetAsync(pedidoCompraDto.Fornecedor);
         pedido.SituacaoPedido = pedidoCompraDto.Situacao;
         pedido.Observacao = pedidoCompraDto.Observacao;
+        pedido.DataEntrega = pedidoCompraDto.DataEntrega;
 
         await _entityRepository.UpdateAsync(pedido);
         return Ok();
@@ -107,7 +108,7 @@ public class PedidosCompraController : ControllerBase
         }
 
         var pedido = await _entityRepository.GetAsync(id.GetValueOrDefault());
-        var chavesItens = pedido.Itens?.Select(item => item.IdProduto);
+        var chavesItens = pedido.Itens?.Select(item => item.Produto.Id);
         if (pedido.Itens == null || chavesItens == null || !chavesItens.Any())
             return BadRequest();
 
@@ -115,7 +116,7 @@ public class PedidosCompraController : ControllerBase
         var itensPedido = new List<ItemPedidoDto>();
         foreach (var itemPedido in pedido.Itens)
         {
-            var produto = produtos[itemPedido.IdProduto.GetValueOrDefault()];
+            var produto = produtos[itemPedido.Produto.Id];
             var item = itemPedido.AsDto(produto);
             itensPedido.Add(item);
         }
@@ -124,7 +125,7 @@ public class PedidosCompraController : ControllerBase
     }
 
     [HttpGet("{situacao}")]
-    public async Task<ActionResult<IEnumerable<PedidoDto>>> GetPedidosBySituacao(SituacaoPedido situacaoPedido)
+    public async Task<ActionResult<IEnumerable<PedidoDto>>> GetPedidosBySituacao(Common.Entities.SituacaoPedidoCompra situacaoPedido)
     {
         var pedidos = await _entityRepository.GetAllAsync(pedido => pedido.SituacaoPedido == situacaoPedido);
         var produtos = (await _entityRepositoryProduto.GetAllAsync()).ToDictionary(produto => produto.Id);
@@ -133,7 +134,7 @@ public class PedidosCompraController : ControllerBase
             var itensPedido = new List<ItemPedidoDto>();
             foreach (var item in pedido.Itens)
             {
-                var itemPedido = item.AsDto(produtos[item.IdProduto.GetValueOrDefault()]);
+                var itemPedido = item.AsDto(produtos[item.Produto.Id]);
                 itensPedido.Add(itemPedido);
             }
             return pedido.AsDto(itensPedido);
@@ -150,7 +151,7 @@ public class PedidosCompraController : ControllerBase
             var itensPedido = new List<ItemPedidoDto>();
             foreach (var item in pedido.Itens)
             {
-                var itemPedido = item.AsDto(produtos[item.IdProduto.GetValueOrDefault()]);
+                var itemPedido = item.AsDto(produtos[item.Produto.Id]);
                 itensPedido.Add(itemPedido);
             }
             return pedido.AsDto(itensPedido);

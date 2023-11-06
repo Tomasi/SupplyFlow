@@ -5,4 +5,4 @@ namespace SupplyFlow.Service.Dtos;
 
 public record FornecedorDto(Guid Id, string? NomeFornecedor, SituacaoFornecedor Situacao, int PrazoEntrega);
 public record CreateFornecedorDto([Required] string? NomeFornecedor, [Required] int PrazoEntrega);
-public record UpdateFornecedorDto([Required] string? NomeFornecedor, [Required] SituacaoFornecedor Situacao, [Required] int PrazoEntrega);
+public record UpdateFornecedorDto(string? NomeFornecedor, SituacaoFornecedor Situacao, int PrazoEntrega);

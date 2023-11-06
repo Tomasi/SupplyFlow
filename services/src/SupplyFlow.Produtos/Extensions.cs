@@ -1,7 +1,7 @@
 using SupplyFlow.Common.Entities;
 using SupplyFlow.Services.Dtos;
 
-namespace SupplyFlow.PedidosCompra;
+namespace SupplyFlow.Services.Produtos;
 
 public static class Extensions
 {
@@ -9,11 +9,11 @@ public static class Extensions
     {
         return new ProdutoDto(
             produto.Id,
-            produto.CodigoProduto,
+            produto.Codigo,
             produto.Descricao,
             produto.Fornecedor?.NomeFornecedor,
             produto.PrecoUnitario,
-            produto.Situacao,
+            produto.SituacaoProduto,
             produto.Validade
         );
     }

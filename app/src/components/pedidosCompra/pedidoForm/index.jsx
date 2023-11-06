@@ -43,26 +43,22 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
     const [rowModesModel, setItemModesModel] = useState({});
     const [formData, setFormData] = useState({
         fornecedor: {},
-        dataEntrega: '',
-        situacao: '',
+        dataEntrega: dayjs(),
+        situacao: 'Pendente',
         observacao: '',
     });
 
-    const situacoes = ['Pendente', 'Aprovado', 'Em trânsito', 'Entregue', 'Reprovado'];
+    const situacoes = ['Pendente', 'Aprovado'];
     const situacaoMap = {
         1: 'Pendente',
         2: 'Aprovado',
-        3: 'Em Trânsito',
-        4: 'Entregue',
-        5: 'Reprovado',
+        3: 'Reprovado',
     };
 
     const situacaoMapDescricao = {
         'Pendente': 1,
         'Aprovado': 2,
-        'Em Trânsito': 3,
-        'Entregue': 4,
-        'Reprovado': 5,
+        'Reprovado': 3,
     };
 
     const onCancelFormProdutos = () =>
@@ -93,16 +89,15 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 
     async function consultaFornecedores()
     {
-        const requisicaoResult = await getFornecedores();
-        setFornecedores(requisicaoResult);
+        var fornecedores = await getFornecedores();
+        setFornecedores(fornecedores);
     }
 
     function alimentaInformacoesPedidoCompra()
     {
         if (pedidoCompra)
         {
-            console.log("Pedido de compra na abertura", pedidoCompra)
-            const pedidoCompraWithDefaults = {
+            var pedido = {
                 ...pedidoCompra,
                 fornecedor: pedidoCompra.fornecedor,
                 dataEntrega: pedidoCompra.dataEntrega || '',
@@ -110,32 +105,35 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                 situacao: situacaoMap[pedidoCompra.situacao] || ''
             };
 
-            setFormData(pedidoCompraWithDefaults);
-            if (pedidoCompra.itens.length > 0)
+            setFormData(pedido);
+            if (pedido.itens.length > 0)
             {
-                setItemData(pedidoCompra.itens);
+                setItemData(pedido.itens);
             }
         }
     }
 
     useEffect(() =>
     {
+        console.log("Pedido", pedidoCompra)
         consultaFornecedores();
         alimentaInformacoesPedidoCompra();
     }, []);
 
     function criaPedido()
     {
-        const pedido = {
+        const dataEntregaString = formData.dataEntrega.format("YYYY-MM-DD");
+        const dataEntregaDateOnly = dayjs(dataEntregaString).format("YYYY-MM-DD");
+        var pedido = {
             itens: itensPedido.map(item =>
             ({
                 produtoId: item.produtoId,
                 quantidade: item.quantidade
             })),
+            dataEntrega: dataEntregaDateOnly,
             fornecedor: formData.fornecedor.id,
             observacao: formData.observacao
         };
-        console.log("Pedido em gravação", pedido)
         createPedidoCompra(pedido);
     }
 
@@ -147,14 +145,15 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             itens.push({ produtoId: item.produtoId, quantidade: item.quantidade });
         });
 
+        const dataEntregaString = formData.dataEntrega.format("YYYY-MM-DD");
+        const dataEntregaDateOnly = dayjs(dataEntregaString).format("YYYY-MM-DD");
         const pedido = {
             itens: itens,
             fornecedor: formData.fornecedor.id,
             observacao: formData.observacao,
-            dataEntrega: formData.dataEntrega,
+            dataEntrega: dataEntregaDateOnly,
             situacao: situacaoMapDescricao[formData.situacao],
         }
-        console.log("Pedido atualizado", pedido)
         atualizaPedidoCompra(pedido, pedidoCompra.id);
     }
 
@@ -362,7 +361,9 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                     />
                 </Grid>
                 <Grid item xs={4} sm={4}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+                    <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        adapterLocale="pt-br">
                         <DatePicker
                             label="Entrega"
                             name="dataEntrega"
@@ -371,12 +372,10 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                             sx={{ width: '100%' }}
                             onChange={(value) =>
                             {
-                                const formattedDate = value.format("DD/MM/YYYY");
                                 setFormData({
                                     ...formData,
-                                    dataEntrega: formattedDate,
+                                    dataEntrega: value
                                 });
-                                console.log(formData)
                             }}
                         />
                     </LocalizationProvider>
@@ -384,15 +383,8 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                 <Grid item xs={4} sm={4}>
                     <Autocomplete
                         options={situacoes}
+                        readOnly={true}
                         value={formData.situacao || null}
-                        onChange={(event, newValue) =>
-                        {
-                            console.log("Situação:", newValue)
-                            setFormData({
-                                ...formData,
-                                situacao: newValue
-                            })
-                        }}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
