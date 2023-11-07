@@ -145,8 +145,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             itens.push({ produtoId: item.produtoId, quantidade: item.quantidade });
         });
 
-        const dataEntregaString = formData.dataEntrega.format("YYYY-MM-DD");
-        const dataEntregaDateOnly = dayjs(dataEntregaString).format("YYYY-MM-DD");
+        const dataEntregaDateOnly = dayjs(formData.dataEntrega).format("YYYY-MM-DD");
         const pedido = {
             itens: itens,
             fornecedor: formData.fornecedor.id,

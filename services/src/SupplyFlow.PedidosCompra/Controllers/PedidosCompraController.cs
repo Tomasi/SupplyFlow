@@ -40,10 +40,13 @@ public class PedidosCompraController : ControllerBase
             itensPedido.Add(item.AsItemPedido(produtos[item.ProdutoId]));
         }
 
+        var pedidos = await _entityRepository.GetAllAsync();
+        long ultimoPedido = !pedidos.Any() ? 0 : pedidos.Max(pedido => pedido.NumeroPedido);
+
         PedidoCompra pedido = new()
         {
             Id = Guid.NewGuid(),
-            NumeroPedido = (await _entityRepository.GetAllAsync()).Max(pedido => pedido.NumeroPedido) + 1,
+            NumeroPedido = ultimoPedido + 1,
             DataPedido = DateOnly.FromDateTime(DateTime.Now),
             DataEntrega = pedidoCompraDto.DataEntrega,
             Fornecedor = await _entityRepositoryFornecedores.GetAsync(pedidoCompraDto.Fornecedor),
