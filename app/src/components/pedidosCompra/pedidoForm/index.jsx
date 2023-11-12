@@ -11,7 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import ProdutoSelect from '../produtos';
 import { v4 as uuidv4 } from 'uuid';
-import { getFornecedores, createPedidoCompra, atualizaPedidoCompra } from '../../../services/supplyFlowApi'
+import { getFornecedores, postPedidoCompra, putPedidoCompra } from '../../../services/supplyFlowApi'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -115,7 +115,6 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 
     useEffect(() =>
     {
-        console.log("Pedido", pedidoCompra)
         consultaFornecedores();
         alimentaInformacoesPedidoCompra();
     }, []);
@@ -134,7 +133,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             fornecedor: formData.fornecedor.id,
             observacao: formData.observacao
         };
-        createPedidoCompra(pedido);
+        postPedidoCompra(pedido);
     }
 
     function atualizaPedido()
@@ -153,7 +152,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             dataEntrega: dataEntregaDateOnly,
             situacao: situacaoMapDescricao[formData.situacao],
         }
-        atualizaPedidoCompra(pedido, pedidoCompra.id);
+        putPedidoCompra(pedido, pedidoCompra.id);
     }
 
     const onSubmit = () =>
@@ -431,7 +430,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
                 />
             </div>
             {isFormProdutosOpen && (
-                <ProdutoSelect open={isFormProdutosOpen} onClose={onCloseFormProdutos} onCancel={onCancelFormProdutos} />
+                <ProdutoSelect open={isFormProdutosOpen} onClose={onCloseFormProdutos} onCancel={onCancelFormProdutos} fornecedor={formData.fornecedor} />
             )}
         </Dialog>
     );

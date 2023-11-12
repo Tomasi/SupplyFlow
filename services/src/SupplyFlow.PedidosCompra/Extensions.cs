@@ -39,8 +39,7 @@ public static class Extensions
             Id = Guid.NewGuid(),
             Produto = produto,
             Quantidade = itemPedido.Quantidade,
-            PrecoUnitario = produto.PrecoUnitario,
-            PrecoTotal = produto.PrecoUnitario * itemPedido.Quantidade
+            PrecoUnitario = produto.PrecoUnitario
         };
     }
 }

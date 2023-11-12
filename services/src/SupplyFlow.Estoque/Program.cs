@@ -7,7 +7,7 @@ using SupplyFlow.Common.MongoDB;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMongo().
-AddMongoRepository<Estoque>("Estoque").
+AddMongoRepository<Estoque>("Estoques").
 AddScoped<IRepository<Produto>>(provider =>
 {
     var database = provider.GetRequiredService<IMongoDatabase>();

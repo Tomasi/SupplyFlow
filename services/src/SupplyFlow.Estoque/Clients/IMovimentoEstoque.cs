@@ -1,6 +1,5 @@
-using MongoDB.Bson;
 using SupplyFlow.Common.Entities;
-namespace SupplyFlow.Service.Estoque.Consumers;
+namespace SupplyFlow.Service.Estoque.Clients;
 
 public interface IMovimentoEstoque
 {

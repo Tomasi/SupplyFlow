@@ -3,11 +3,16 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import ProdutoSelect from '../pedidosCompra/produtos';
+import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
+import { Autocomplete } from '@mui/material';
+import { getFornecedores, postMovimento } from '../../services/supplyFlowApi';
 import
 {
     GridRowModes,
@@ -18,9 +23,23 @@ import
 export default function Entrada()
 {
     const [produtos, setRows] = useState([]);
+    const [fornecedores, setFornecedores] = useState([]);
+    const [fornecedorSelecionado, setFornecedor] = useState({});
     const [isFormProdutosOpen, setIsFormProdutosOpen] = useState(false);
+    const [isSucess, setSucess] = useState(false);
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
     const [rowModesModel, setItemModesModel] = useState({});
+
+    useEffect(() =>
+    {
+        consultaFornecedores();
+    }, []);
+
+    async function consultaFornecedores()
+    {
+        var fornecedores = await getFornecedores();
+        setFornecedores(fornecedores);
+    }
 
     const addProduto = () =>
     {
@@ -71,7 +90,18 @@ export default function Entrada()
 
     const onSubmit = () =>
     {
-        console.log("Submit");
+        produtos.forEach(item =>
+        {
+            var movimentoSaida = {
+                produto: item.Produto.id,
+                quantidade: item.quantidade,
+                tipoMovimento: 1
+            }
+            postMovimento(movimentoSaida)
+        });
+        setSucess(true)
+        setRows([]);
+        setFornecedor({})
     };
 
     const onCloseFormProdutos = (novoProduto) =>
@@ -107,7 +137,8 @@ export default function Entrada()
             field: 'quantidade',
             headerName: 'Quantidade',
             flex: 1,
-            editable: true
+            editable: true,
+            type: 'number',
         },
         {
             field: 'actions',
@@ -152,6 +183,16 @@ export default function Entrada()
         },
     ];
 
+    const handleClose = (event, reason) =>
+    {
+        if (reason === 'clickaway')
+        {
+            return;
+        }
+
+        setSucess(false)
+    };
+
     return (
         <Box sx={{ width: '100%' }}>
             <Toolbar>
@@ -165,16 +206,23 @@ export default function Entrada()
                     Salvar
                 </Button>
             </Toolbar>
-            <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-                <Button size="large" onClick={addProduto}>
-                    Adicionar
-                </Button>
-                {produtos.length >= 1 && (
-                    <Button size="large" onClick={() => removeProduto()}>
-                        Remover
-                    </Button>
+            <Autocomplete
+                options={fornecedores}
+                getOptionLabel={(option) => option.nomeFornecedor || ''}
+                value={fornecedorSelecionado}
+                onChange={(event, newValue) =>
+                {
+                    setRows([])
+                    setFornecedor(newValue)
+                }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label="Fornecedor"
+                    />
                 )}
-            </Stack>
+            />
+            <br />
             <DataGrid
                 autoHeight
                 disableRowSelectionOnClick
@@ -191,8 +239,25 @@ export default function Entrada()
                 processRowUpdate={onProcessRowUpdate}
             />
             {isFormProdutosOpen && (
-                <ProdutoSelect open={isFormProdutosOpen} onClose={onCloseFormProdutos} onCancel={onCancelFormProdutos} />
+                <ProdutoSelect open={isFormProdutosOpen} onClose={onCloseFormProdutos} onCancel={onCancelFormProdutos} fornecedor={fornecedorSelecionado} />
             )}
-        </Box>
+            <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+                <Button size="large" onClick={addProduto}>
+                    Adicionar
+                </Button>
+                {produtos.length >= 1 && (
+                    <Button size="large" onClick={() => removeProduto()}>
+                        Remover
+                    </Button>
+                )}
+            </Stack>
+            <Stack>
+                <Snackbar open={isSucess} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                        Entrada realizada com sucesso!
+                    </Alert>
+                </Snackbar>
+            </Stack>
+        </Box >
     );
 }

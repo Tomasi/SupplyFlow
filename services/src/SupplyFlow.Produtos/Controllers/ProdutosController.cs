@@ -55,6 +55,13 @@ public class ProdutosController : ControllerBase
         return Ok();
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ProdutoDto>>> GetAllAsync()
+    {
+        var produtos = await _entityRepository.GetAllAsync();
+        return Ok(produtos?.Select(produto => produto.AsDto()));
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<ProdutoDto>> GetByIdAsync(Guid? id)
     {
@@ -67,10 +74,15 @@ public class ProdutosController : ControllerBase
         return Ok(produto.AsDto());
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProdutoDto>>> GetAllAsync()
+    [HttpGet("fornecedor")]
+    public async Task<ActionResult<IEnumerable<ProdutoDto>>> GetAllByFornecedorAsync([FromQuery] Guid? idFornecedor)
     {
-        var produtos = await _entityRepository.GetAllAsync();
-        return Ok(produtos?.Select(produto => produto.AsDto()));
+        if (idFornecedor == null)
+        {
+            return BadRequest("Favor informar um fornecedor.");
+        }
+
+        var produtos = await _entityRepository.GetAllAsync(produto => produto.Fornecedor.Id == idFornecedor.GetValueOrDefault());
+        return Ok(produtos.Select(produto => produto.AsDto()));
     }
 }

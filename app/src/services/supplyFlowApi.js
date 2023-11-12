@@ -3,6 +3,7 @@ import axios from 'axios';
 const fornecedoresUrl = "http://localhost:5285"
 const pedidosCompraUrl = "http://localhost:5050"
 const produtosUrl = "http://localhost:5118"
+const movimentosUrl = "http://localhost:5048"
 
 const fornecedoresService = axios.create({
     baseURL: fornecedoresUrl
@@ -16,6 +17,24 @@ const produtosService = axios.create({
     baseURL: produtosUrl
 });
 
+const movimentosService = axios.create({
+    baseURL: movimentosUrl
+})
+
+export const postMovimento = async (movimento) =>
+{
+    try 
+    {
+        console.log("Movimento", movimento)
+        var response = await movimentosService.post('/movimento', movimento)
+        return response.data;
+    } catch (error)
+    {
+        console.log(error)
+        throw error;
+    }
+}
+
 export const getFornecedores = async () =>
 {
     try
@@ -24,11 +43,12 @@ export const getFornecedores = async () =>
         return response.data;
     } catch (error)
     {
+        console.log(error)
         throw error;
     }
 }
 
-export const createPedidoCompra = async (pedidoCompra) =>
+export const postPedidoCompra = async (pedidoCompra) =>
 {
     try
     {
@@ -36,6 +56,7 @@ export const createPedidoCompra = async (pedidoCompra) =>
         return response.data;
     } catch (error)
     {
+        console.log(error)
         throw error;
     }
 }
@@ -48,24 +69,12 @@ export const getPedidosCompra = async () =>
         return response.data;
     } catch (error)
     {
-        throw error;
-    }
-}
-
-export const getPedidosCompraAprovados = async (situacao) =>
-{
-    try
-    {
-        var response = await pedidosCompraService.get(`/pedidosCompra/${situacao}`);
-        return response.data;
-    } catch (error)
-    {
         console.log(error)
         throw error;
     }
 }
 
-export const atualizaPedidoCompra = async (pedidoCompra, id) =>
+export const putPedidoCompra = async (pedidoCompra, id) =>
 {
     console.log("Pedido compra", pedidoCompra)
     console.log("ID", id)
@@ -88,6 +97,20 @@ export const getProdutos = async (produto) =>
         return response.data;
     } catch (error)
     {
+        console.log(error);
+        throw error;
+    }
+}
+
+export const getProdutosByFornecedor = async (fornecedorId) =>
+{
+    try
+    {
+        var response = await produtosService.get(`/produtos/fornecedor?idFornecedor=${fornecedorId}`);
+        return response.data;
+    } catch (error)
+    {
+        console.log(error);
         throw error;
     }
 }

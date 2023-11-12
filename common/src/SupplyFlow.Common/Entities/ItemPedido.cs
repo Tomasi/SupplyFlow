@@ -6,6 +6,9 @@ namespace SupplyFlow.Common.Entities
         public Produto Produto { get; set; }
         public int Quantidade { get; set; }
         public decimal PrecoUnitario { get; set; }
-        public decimal PrecoTotal { get; set; }
+        public decimal PrecoTotal
+        {
+            get { return Quantidade * PrecoUnitario; }
+        }
     }
 }

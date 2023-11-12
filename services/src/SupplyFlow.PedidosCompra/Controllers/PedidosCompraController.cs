@@ -56,7 +56,6 @@ public class PedidosCompraController : ControllerBase
         };
 
         await _entityRepository.CreateAsync(pedido);
-        await _publishEndpoint.Publish(new PedidoCompraCreated(pedido.Id, "", pedido.PrecoTotal, pedido.DataPedido));
         return CreatedAtAction(nameof(GetByIdAsync), new { id = pedido.Id }, pedido);
     }
 

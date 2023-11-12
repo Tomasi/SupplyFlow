@@ -3,16 +3,16 @@ using SupplyFlow.Common;
 using SupplyFlow.Common.Entities;
 using SupplyFlow.Contracts;
 
-namespace SupplyFlow.Service.Estoque.Consumers;
+namespace SupplyFlow.Service.Estoque.Clients;
 
-public class MovimentoCreatedConsumers : IConsumer<MovimentoCreated>
+public class MovimentoCreatedClientEstoque : IConsumer<MovimentoCreated>
 {
 
     private readonly IRepository<Common.Entities.Estoque> _repositoryEstoque;
     private readonly IRepository<Movimento> _repositoryMovimento;
     private IMovimentoEstoque _movimentaEstoque;
 
-    public MovimentoCreatedConsumers(IRepository<Common.Entities.Estoque> repositoryEstoque, IRepository<Movimento> repositoryMovimento)
+    public MovimentoCreatedClientEstoque(IRepository<Common.Entities.Estoque> repositoryEstoque, IRepository<Movimento> repositoryMovimento)
     {
         this._repositoryEstoque = repositoryEstoque;
         this._repositoryMovimento = repositoryMovimento;

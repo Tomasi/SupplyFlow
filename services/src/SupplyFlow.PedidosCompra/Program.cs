@@ -18,6 +18,14 @@ AddScoped<IRepository<Fornecedor>>(provider =>
 {
     var database = provider.GetRequiredService<IMongoDatabase>();
     return new MongoRepository<Fornecedor>(database, "Fornecedores");
+}).AddScoped<IRepository<Estoque>>(provider =>
+{
+    var database = provider.GetRequiredService<IMongoDatabase>();
+    return new MongoRepository<Estoque>(database, "Estoques");
+}).AddScoped<IRepository<Movimento>>(provider =>
+{
+    var database = provider.GetRequiredService<IMongoDatabase>();
+    return new MongoRepository<Movimento>(database, "Movimentos");
 });
 
 builder.Services.AddControllers(options =>

@@ -7,17 +7,25 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import { getProdutos } from '../../../services/supplyFlowApi';
+import { getProdutos, getProdutosByFornecedor } from '../../../services/supplyFlowApi';
 import { Autocomplete } from '@mui/material';
 
-export default function ProdutoSelect({ open, onClose: onClose, onCancel: onCancel, onProdutoSelect: onProdutoSelect })
+export default function ProdutoSelect({ open, onClose: onClose, onCancel: onCancel, onProdutoSelect: onProdutoSelect, fornecedor })
 {
     const [produtos, setProdutos] = React.useState([])
     const [produto, setProduto] = React.useState({});
 
     async function consultaProdutos()
     {
-        const produtos = await getProdutos();
+        var produtos;
+        if (fornecedor)
+        {
+            produtos = await getProdutosByFornecedor(fornecedor.id);
+        } else
+        {
+            produtos = await getProdutos();
+        }
+
         setProdutos(produtos);
     }
 
