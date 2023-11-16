@@ -21,6 +21,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
+        path: ~/contracts/src/SupplyFlow.Contracts
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
