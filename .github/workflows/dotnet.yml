@@ -26,7 +26,7 @@ jobs:
 
       # Adicione o comando 'dotnet build' com os caminhos dos projetos desejados
       - name: Build
-        run: dotnet build --no-restore ./services/src/**/*.csproj --verbosity normal
+        run: dotnet build --no-restore ./services/src/SupplyFlow.Estoque/*.csproj --verbosity normal
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
