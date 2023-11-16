@@ -22,11 +22,11 @@ jobs:
         run: dotnet restore
 
       - name: List contents of the directory
-        run: ls -R ./services/src/
+        run: ls -R ./
 
-      # Adicione o comando 'dotnet build' com os caminhos dos projetos desejados
+      # Adicione o comando 'dotnet build' com o curinga para todos os projetos .csproj
       - name: Build
-        run: dotnet build --no-restore ../services/src/SupplyFlow.Estoque/*.csproj --verbosity normal
+        run: dotnet build --no-restore */*.csproj --verbosity normal
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
