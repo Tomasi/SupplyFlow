@@ -24,7 +24,7 @@ jobs:
 
       # Adicione o comando 'dotnet build' com os caminhos dos projetos desejados
       - name: Build
-        run: dotnet build --no-restore ./Path/To/Your/Project1.csproj ./Path/To/Your/Project2.csproj --verbosity normal
+        run: dotnet build --no-restore ./**/*.csproj --verbosity normal
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
