@@ -17,6 +17,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Debug
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Contents of the directory:"
+        ls -R
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -29,8 +34,3 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Debug
-      run: |
-        echo "Current directory: $(pwd)"
-        echo "Contents of the directory:"
-        ls -R
