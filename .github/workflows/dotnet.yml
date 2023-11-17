@@ -23,10 +23,30 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./common/src/SupplyFlow.Common
     - name: Restore dependencies
+      run: dotnet restore ./contracts/src/SupplyFlow.Contracts
+    - name: Restore dependencies
       run: dotnet restore ./services/src/SupplyFlow.Estoque
+    - name: Restore dependencies
+      run: dotnet restore ./services/src/SupplyFlow.Fornecedores
+    - name: Restore dependencies
+      run: dotnet restore ./services/src/SupplyFlow.Movimento
+    - name: Restore dependencies
+      run: dotnet restore ./services/src/SupplyFlow.PedidosCompra
+    - name: Restore dependencies
+      run: dotnet restore ./services/src/SupplyFlow.Produtos
     - name: Build
       run: dotnet build --no-restore ./common/src/SupplyFlow.Common
     - name: Build
+      run: dotnet build --no-restore ./contracts/src/SupplyFlow.Contracts
+    - name: Build
       run: dotnet build --no-restore ./services/src/SupplyFlow.Estoque
+    - name: Build
+      run: dotnet build --no-restore ./services/src/SupplyFlow.Fornecedores
+    - name: Build
+      run: dotnet build --no-restore ./services/src/SupplyFlow.Movimento
+    - name: Build
+      run: dotnet build --no-restore ./services/src/SupplyFlow.PedidosCompra
+    - name: Build
+      run: dotnet build --no-restore ./services/src/SupplyFlow.Produtos
     - name: Test
       run: dotnet test --no-build --verbosity normal
