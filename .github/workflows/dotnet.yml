@@ -5,9 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
@@ -20,33 +20,15 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore ./common/src/SupplyFlow.Common
-    - name: Restore dependencies
-      run: dotnet restore ./contracts/src/SupplyFlow.Contracts
-    - name: Restore dependencies
-      run: dotnet restore ./services/src/SupplyFlow.Estoque
-    - name: Restore dependencies
-      run: dotnet restore ./services/src/SupplyFlow.Fornecedores
-    - name: Restore dependencies
-      run: dotnet restore ./services/src/SupplyFlow.Movimento
-    - name: Restore dependencies
-      run: dotnet restore ./services/src/SupplyFlow.PedidosCompra
-    - name: Restore dependencies
-      run: dotnet restore ./services/src/SupplyFlow.Produtos
-    - name: Build
-      run: dotnet build --no-restore ./common/src/SupplyFlow.Common
-    - name: Build
-      run: dotnet build --no-restore ./contracts/src/SupplyFlow.Contracts
-    - name: Build
-      run: dotnet build --no-restore ./services/src/SupplyFlow.Estoque
-    - name: Build
-      run: dotnet build --no-restore ./services/src/SupplyFlow.Fornecedores
-    - name: Build
-      run: dotnet build --no-restore ./services/src/SupplyFlow.Movimento
-    - name: Build
-      run: dotnet build --no-restore ./services/src/SupplyFlow.PedidosCompra
-    - name: Build
-      run: dotnet build --no-restore ./services/src/SupplyFlow.Produtos
+
+    - name: Restore dependencies and Build
+      run: |
+        for dir in ./services/src/*; do
+          for csproj in $dir/*.csproj; do
+            dotnet restore $csproj
+            dotnet build --no-restore $csproj
+          done
+        done
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
