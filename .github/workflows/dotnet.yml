@@ -25,7 +25,7 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Change directory to project
-      run: cd ./contracts/src/SupplyFlow.Contracts
+      run: cd $GITHUB_ACTION_PATH/contracts/src/SupplyFlow.Contracts
 
     - name: Restore dependencies
       run: dotnet restore
