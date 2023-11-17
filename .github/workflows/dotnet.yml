@@ -21,8 +21,12 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./common/src/SupplyFlow.Common
+    - name: Restore dependencies
+      run: dotnet restore ./services/src/SupplyFlow.Estoque
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore ./common/src/SupplyFlow.Common
+    - name: Build
+      run: dotnet build --no-restore ./services/src/SupplyFlow.Estoque
     - name: Test
       run: dotnet test --no-build --verbosity normal
