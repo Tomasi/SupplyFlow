@@ -17,16 +17,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Debug
-      run: |
-        echo "Current directory: $(pwd)"
-        echo "Contents of the directory:"
-        ls -R
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        path: ~/contracts/src/SupplyFlow.Contracts
+        path: SupplyFlow/contracts/src/SupplyFlow.Contracts
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
