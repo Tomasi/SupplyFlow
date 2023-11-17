@@ -31,5 +31,6 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Debug
       run: |
-        pwd
+        echo "Current directory: $(pwd)"
+        echo "Contents of the directory:"
         ls -R
