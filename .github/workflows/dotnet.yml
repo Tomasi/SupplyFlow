@@ -6,33 +6,23 @@ name: .NET
 on:
   push:
     branches: [ "master" ]
-    paths:
-      - '**.cs'
   pull_request:
     branches: [ "master" ]
 
-env: 
-  PATH_PROJECT: ./services/src/SupplyFlow.Estoque/SupplyFlow.Estoque.csproj
-
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
+    - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-        
     - name: Restore dependencies
-      run: dotnet restore --source ${{env.PATH_PROJECT}}
-
+      run: dotnet restore ./services/src/SupplyFlow.Estoque
     - name: Build
-      run: dotnet build --no-restore
-
+      run: dotnet build --no-restore ./services/src/SupplyFlow.Estoque
     - name: Test
       run: dotnet test --no-build --verbosity normal
-
