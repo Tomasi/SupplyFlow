@@ -22,7 +22,7 @@ public static class Extensions
             var serviceSettings = configuration?.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
             var mongoDbSettings = configuration?.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
             var mongoClient = new MongoClient(mongoDbSettings?.ConnectionString);
-            return mongoClient.GetDatabase("mongodb+srv://admin:BougUo1epYRQ9RIj@supplyflow.nuqyzen.mongodb.net/");
+            return mongoClient.GetDatabase(mongoDbSettings?.ConnectionString);
         });
 
         return services;
