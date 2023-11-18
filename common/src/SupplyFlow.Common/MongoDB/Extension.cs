@@ -21,7 +21,7 @@ public static class Extensions
             var configuration = serviceProvider.GetService<IConfiguration>();
             var serviceSettings = configuration?.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
             var mongoDbSettings = configuration?.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-            var mongoClient = new MongoClient(mongoDbSettings?.ConnectionString);
+            var mongoClient = new MongoClient($"mongodb://{mongoDbSettings?.ConnectionString}");
             return mongoClient.GetDatabase(mongoDbSettings?.ConnectionString);
         });
 
