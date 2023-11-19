@@ -10,7 +10,7 @@ import Slide from '@mui/material/Slide';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import ProdutoSelect from '../produtos';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 import { getFornecedores, postPedidoCompra, putPedidoCompra } from '../../../services/supplyFlowApi'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
