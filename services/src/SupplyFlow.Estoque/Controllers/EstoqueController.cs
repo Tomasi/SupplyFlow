@@ -17,10 +17,13 @@ public class EstoqueController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<EstoqueDto>>> GetAllAsync()
     {
-
-        return Ok();
-
         var produtosEstoques = await _entityEstoque.GetAllAsync();
+
+        if (produtosEstoques == null || !produtosEstoques.Any())
+        {
+            return NoContent();
+        }
+
         var estoquesDto = new List<EstoqueDto>();
         foreach (var produto in produtosEstoques)
         {
