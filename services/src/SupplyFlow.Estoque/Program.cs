@@ -17,8 +17,7 @@ AddScoped<IRepository<Movimento>>(provider =>
 {
     var database = provider.GetRequiredService<IMongoDatabase>();
     return new MongoRepository<Movimento>(database, "Movimentos");
-});
-// AddMassTransitWithRabbitMq();
+}).AddMassTransitWithRabbitMq();
 
 builder.Services.AddControllers(options =>
 {
