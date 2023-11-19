@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\common\src\SupplyFlow.Common\SupplyFlow.Common.csproj" />
-    <ProjectReference Include="..\..\..\contracts\SupplyFlow.Contracts\src\SupplyFlow.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\contracts\src\SupplyFlow.Contracts\SupplyFlow.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
