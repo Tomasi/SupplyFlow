@@ -14,7 +14,6 @@ export default function ProdutoSelect({ open, onClose: onClose, onCancel: onCanc
 {
     const [produtos, setProdutos] = React.useState([])
     const [produto, setProduto] = React.useState({});
-
     async function consultaProdutos()
     {
         var produtos;
@@ -32,7 +31,7 @@ export default function ProdutoSelect({ open, onClose: onClose, onCancel: onCanc
     useEffect(() =>
     {
         consultaProdutos();
-    })
+    }, [])
 
     const handleClose = (reason) =>
     {
