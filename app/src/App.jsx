@@ -12,19 +12,19 @@ function App()
   return (
     <BrowserRouter>
       <Switch>
-        {"/home"}
+        {"./src/components/home"}
       </Switch>
       <Switch>
-        {"/estoque"}
+        {"./src/components/estoque"}
       </Switch>
       <Switch>
-        {"/pedidos"}
+        {"./src/components/pedidos"}
       </Switch>
       <Switch>
-        {"/entrada"}
+        {"./src/components/entrada"}
       </Switch>
       <Switch>
-        {"/saida"}
+        {"./src/components/saida"}
       </Switch>
     </BrowserRouter>
   );
