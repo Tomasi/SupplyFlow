@@ -13,11 +13,11 @@ function App()
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/app/home" element={<Home />}></Route>
-        <Route path="/app/estoque" element={<Estoque />}></Route>
-        <Route path="/app/pedidos" element={<Pedidos />}></Route>
-        <Route path="/app/entrada" element={<Entrada />}></Route>
-        <Route path="/app/saida" element={<Saida />}></Route>
+        <Route path="/home" element={<Home />}></Route>
+        <Route path="/estoque" element={<Estoque />}></Route>
+        <Route path="/pedidos" element={<Pedidos />}></Route>
+        <Route path="/entrada" element={<Entrada />}></Route>
+        <Route path="/saida" element={<Saida />}></Route>
       </Routes>
     </Router>
   )
