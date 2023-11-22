@@ -4,10 +4,12 @@ import Estoque from "./components/estoque"
 import Pedidos from "./components/pedidosCompra"
 import Entrada from "./components/entrada"
 import Saida from "./components/saida"
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-function App()
+const App = () => 
 {
   return (
     <Router>
@@ -22,5 +24,14 @@ function App()
     </Router>
   )
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Router>
+      <App />
+    </Router>
+  </React.StrictMode>
+);
 
 export default App
