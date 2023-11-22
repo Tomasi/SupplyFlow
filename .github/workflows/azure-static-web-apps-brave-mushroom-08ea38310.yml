@@ -30,7 +30,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y apt-utils
           sudo apt-get install -y gpg
-          pip install -r requirements.txt
+          curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+          python get-pip.py
 
       - name: Build And Deploy
         id: builddeploy
