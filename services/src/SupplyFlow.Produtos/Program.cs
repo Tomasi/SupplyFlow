@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMongo().
 AddMongoRepository<Produto>("Produtos").
-AddMassTransitWithRabbitMq().
 AddScoped<IRepository<Fornecedor>>(provider =>
 {
     var database = provider.GetRequiredService<IMongoDatabase>();
