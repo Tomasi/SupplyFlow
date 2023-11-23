@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import GridPedidos from './gridPedidos/index'
+import GridPedidos from './gridPedidos'
 import PedidoForm from './pedidoForm';
 import Button from '@mui/material/Button';
 import { ButtonGroup } from '@mui/material';

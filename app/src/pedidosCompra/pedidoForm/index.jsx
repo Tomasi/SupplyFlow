@@ -11,7 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import ProdutoSelect from '../produtos';
 import { v4 as uuidv4 } from 'uuid';
-import { getFornecedores, postPedidoCompra, putPedidoCompra } from '../../../services/supplyFlowApi'
+import { getFornecedores, postPedidoCompra, putPedidoCompra } from '../../services/supplyFlowApi'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -19,7 +19,7 @@ import { Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import { formatMoeda } from '../../../helper/numberHelper'
+import { formatMoeda } from '../../helper/numberHelper'
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import

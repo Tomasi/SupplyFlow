@@ -12,7 +12,7 @@ import ProdutoSelect from '../pedidosCompra/produtos';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import { Autocomplete } from '@mui/material';
-import { getFornecedores, postMovimento } from '../../services/supplyFlowApi';
+import { getFornecedores, postMovimento } from '../services/supplyFlowApi';
 import
 {
     GridRowModes,

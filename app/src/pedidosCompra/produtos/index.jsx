@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import { getProdutos, getProdutosByFornecedor } from '../../../services/supplyFlowApi';
+import { getProdutos, getProdutosByFornecedor } from '../../services/supplyFlowApi';
 import { Autocomplete } from '@mui/material';
 
 export default function ProdutoSelect({ open, onClose: onClose, onCancel: onCancel, onProdutoSelect: onProdutoSelect, fornecedor })

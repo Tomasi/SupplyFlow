@@ -1,9 +1,9 @@
-import Navbar from "./components/navbar"
-import Home from "./components/home"
-import Estoque from "./components/estoque"
-import Pedidos from "./components/pedidosCompra"
-import Entrada from "./components/entrada"
-import Saida from "./components/saida"
+import Navbar from "./navbar"
+import Home from "./home"
+import Estoque from "./estoque"
+import Pedidos from "./pedidosCompra"
+import Entrada from "./entrada"
+import Saida from "./saida"
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 

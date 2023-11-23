@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import ProdutoSelect from '../pedidosCompra/produtos';
 import TextField from '@mui/material/TextField';
 import { Autocomplete } from '@mui/material';
-import { postMovimento } from '../../services/supplyFlowApi';
+import { postMovimento } from '../services/supplyFlowApi';
 import
 {
     GridRowModes,

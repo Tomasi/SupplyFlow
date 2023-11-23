@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { getPedidosCompra } from '../../../services/supplyFlowApi';
+import { getPedidosCompra } from '../../services/supplyFlowApi';
 import PedidoForm from '../pedidoForm/index';
 
 const formatDate = (date) =>
