@@ -28,10 +28,9 @@ public class ProdutosController : ControllerBase
             Descricao = produtoDto.DescricaoProduto,
             PrecoUnitario = produtoDto.PrecoUnitario,
             SituacaoProduto = SituacaoProduto.Ativo,
-            Validade = produtoDto.Validade
+            Validade = produtoDto.Validade,
+            Fornecedor = await _entityRepositoryFornecedor.GetAsync(produtoDto.FornecedorId)
         };
-
-        produto.Fornecedor = await _entityRepositoryFornecedor.GetAsync(produtoDto.FornecedorId);
         await _entityRepository.CreateAsync(produto);
         return CreatedAtAction(nameof(GetByIdAsync), new { id = produto.Id }, produto);
     }
