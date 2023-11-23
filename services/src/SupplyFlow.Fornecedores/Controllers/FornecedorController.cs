@@ -12,11 +12,9 @@ namespace SupplyFlow.Service.Fornecedores.Controllers;
 public class FornecedorController : ControllerBase
 {
     private readonly IRepository<Fornecedor> _entityRepository;
-    private readonly IPublishEndpoint _publishEndpoint;
-    public FornecedorController(IRepository<Fornecedor> entityRepository, IPublishEndpoint publishEndpoint)
+    public FornecedorController(IRepository<Fornecedor> entityRepository)
     {
         this._entityRepository = entityRepository;
-        this._publishEndpoint = publishEndpoint;
     }
 
     [HttpPost]

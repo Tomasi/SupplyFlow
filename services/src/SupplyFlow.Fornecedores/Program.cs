@@ -4,7 +4,7 @@ using SupplyFlow.Common.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMongo().AddMongoRepository<Fornecedor>("Fornecedores").AddMassTransitWithRabbitMq();
+builder.Services.AddMongo().AddMongoRepository<Fornecedor>("Fornecedores");
 builder.Services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;
