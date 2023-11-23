@@ -11,18 +11,18 @@ builder.Services.AddControllers(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin",
-        builder => builder
-            .WithOrigins("http://localhost:5173")
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-    );
-});
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy(builder => 
+//             builder.WithOrigins("http://localhost:5173");
+//             builder.AllowAnyMethod();
+//             builder.AllowAnyHeader();
+//     );
+// });
 
 
 var app = builder.Build();
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
