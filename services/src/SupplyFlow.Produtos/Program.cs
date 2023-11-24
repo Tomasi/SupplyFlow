@@ -1,5 +1,4 @@
 using SupplyFlow.Common.MongoDB;
-using SupplyFlow.Common.MassTransit;
 using SupplyFlow.Common;
 using MongoDB.Driver;
 using SupplyFlow.Common.Entities;
