@@ -5,10 +5,10 @@ import axios from 'axios';
 // const produtosUrl = "http://localhost:5118"
 // const movimentosUrl = "http://localhost:5048"
 
-const fornecedoresUrl = "supplyflowfornecedores.azurewebsites.net"
-const pedidosCompraUrl = "supplyflowpedidoscompra.azurewebsites.net"
-const produtosUrl = "supplyflowprodutos.azurewebsites.net"
-const movimentosUrl = "supplyflowmovimento.azurewebsites.net"
+const fornecedoresUrl = "https://supplyflowfornecedores.azurewebsites.net"
+const pedidosCompraUrl = "https://supplyflowpedidoscompra.azurewebsites.net/"
+const produtosUrl = "https://supplyflowprodutos.azurewebsites.net/"
+const movimentosUrl = "https://supplyflowmovimento.azurewebsites.net"
 
 const fornecedoresService = axios.create({
     baseURL: fornecedoresUrl
