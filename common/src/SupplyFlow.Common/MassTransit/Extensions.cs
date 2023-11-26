@@ -2,7 +2,6 @@ using System.Reflection;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RabbitMQ.Client;
 using SupplyFlow.Common.Settings;
 
 namespace SupplyFlow.Common.MassTransit;

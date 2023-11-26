@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { getPedidosCompra } from '../../services/supplyFlowApi';
 import PedidoForm from '../pedidoForm/index';
+import { ButtonGroup } from '@mui/material';
+import Button from '@mui/material/Button';
+import { alterarStatus } from '../../services/supplyFlowApi';
 
 const formatDate = (date) =>
 {
@@ -119,6 +122,7 @@ export default function GridPedidos()
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [rows, setRows] = useState([]);
     const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
+    const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
 
     useEffect(() =>
     {
@@ -136,6 +140,12 @@ export default function GridPedidos()
         setIsFormOpen(false);
     };
 
+    var OnNovoPedidoClick = () =>
+    {
+        setPedidoSelecionado(null)
+        setIsFormOpen(true);
+    }
+
     const OnRowDoubleClick = (params) =>
     {
         var pedidoSelecionado = rows.find((row) => row.id === params.row.id);
@@ -143,6 +153,36 @@ export default function GridPedidos()
         console.log("Pedido selecionado", pedidoSelecionado)
         setIsFormOpen(true);
     };
+
+    var onAprovacaoClick = () =>
+    {
+        try
+        {
+            if (!rowSelectionModel) return
+            for (var id of rowSelectionModel)
+            {
+                alterarStatus({ situacao: 2 }, id);
+            }
+        } catch (error)
+        {
+            console.error('Erro ao aprovar pedido:', error);
+        }
+    }
+
+    var onReprovacaoClick = () =>
+    {
+        try
+        {
+            if (!rowSelectionModel) return
+            for (var id of rowSelectionModel)
+            {
+                alterarStatus({ situacao: 3 }, id);
+            }
+        } catch (error)
+        {
+            console.error('Erro ao reprovar pedido:', error);
+        }
+    }
 
     if (!rows)
     {
@@ -162,13 +202,22 @@ export default function GridPedidos()
                     },
                 }}
                 pageSizeOptions={[10]}
-                checkboxSelection={true}
-                disableRowSelectionOnClick={true}
+                checkboxSelection
                 onRowDoubleClick={OnRowDoubleClick}
+                onRowSelectionModelChange={(newRowSelectionModel) =>
+                {
+                    setRowSelectionModel(newRowSelectionModel);
+                }}
+                rowSelectionModel={rowSelectionModel}
             />
             {isFormOpen && (
                 <PedidoForm open={isFormOpen} onClose={onCloseDialog} pedidoCompra={pedidoSelecionado} />
             )}
+            <ButtonGroup>
+                <Button onClick={OnNovoPedidoClick} className='novoPedidoButton' variant="outlined">Novo</Button>
+                <Button onClick={onAprovacaoClick} className='aprovacaoButton' variant="outlined">Aprovar</Button>
+                <Button onClick={onReprovacaoClick} className='reprovacaoButton' variant="outlined">Reprovar</Button>
+            </ButtonGroup>
         </div>
     );
 }

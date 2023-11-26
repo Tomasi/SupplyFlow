@@ -4,11 +4,13 @@ import axios from 'axios';
 // const pedidosCompraUrl = "http://localhost:5050"
 // const produtosUrl = "http://localhost:5118"
 // const movimentosUrl = "http://localhost:5048"
+// const estoqueUrl = "http://localhost:5119"
 
 const fornecedoresUrl = "https://supplyflowfornecedores.azurewebsites.net"
 const pedidosCompraUrl = "https://supplyflowpedidoscompra.azurewebsites.net/"
 const produtosUrl = "https://supplyflowprodutos.azurewebsites.net/"
 const movimentosUrl = "https://supplyflowmovimento.azurewebsites.net"
+const estoqueUrl = "https://supplyflowestoque.azurewebsites.net"
 
 const fornecedoresService = axios.create({
     baseURL: fornecedoresUrl
@@ -24,7 +26,11 @@ const produtosService = axios.create({
 
 const movimentosService = axios.create({
     baseURL: movimentosUrl
-})
+});
+
+const estoqueService = axios.create({
+    baseURL: estoqueUrl
+});
 
 export const postMovimento = async (movimento) =>
 {
@@ -79,13 +85,37 @@ export const getPedidosCompra = async () =>
     }
 }
 
+export const getEstoque = async () =>
+{
+    try
+    {
+        var response = await estoqueService.get('/estoque')
+        return response.data;
+    } catch (error)
+    {
+        console.log(error)
+        throw error;
+    }
+}
+
 export const putPedidoCompra = async (pedidoCompra, id) =>
 {
-    console.log("Pedido compra", pedidoCompra)
-    console.log("ID", id)
     try
     {
         var response = await pedidosCompraService.put(`/pedidosCompra/${id}`, pedidoCompra);
+        return response.data;
+    } catch (error)
+    {
+        console.log(error)
+        throw error;
+    }
+}
+
+export const alterarStatus = async (situacao, id) =>
+{
+    try
+    {
+        var response = await pedidosCompraService.put(`/pedidosCompra/alterarStatus/${id}`, situacao);
         return response.data;
     } catch (error)
     {

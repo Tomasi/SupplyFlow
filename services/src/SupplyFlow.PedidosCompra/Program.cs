@@ -3,8 +3,13 @@ using SupplyFlow.Common.MassTransit;
 using SupplyFlow.Common;
 using MongoDB.Driver;
 using SupplyFlow.Common.Entities;
+using SupplyFlow.Common.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var emailSettings = builder.Configuration.GetSection("Email").Get<EmailSettings>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+builder.Services.AddSingleton(emailSettings!);
 
 builder.Services.AddMongo().
 AddMongoRepository<PedidoCompra>("PedidosCompra").

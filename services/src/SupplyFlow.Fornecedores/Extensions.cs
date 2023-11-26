@@ -7,6 +7,6 @@ public static class Extensions
 {
     public static FornecedorDto AsDto(this Fornecedor fornecedor)
     {
-        return new FornecedorDto(fornecedor.Id, fornecedor.NomeFornecedor, fornecedor.Situacao, fornecedor.PrazoEntrega);
+        return new FornecedorDto(fornecedor.Id, fornecedor.NomeFornecedor, fornecedor.Situacao, fornecedor.PrazoEntrega, fornecedor.Email);
     }
 }

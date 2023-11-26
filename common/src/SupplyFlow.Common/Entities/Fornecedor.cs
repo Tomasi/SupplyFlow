@@ -6,6 +6,7 @@ public class Fornecedor : IEntity
     public string? NomeFornecedor { get; set; }
     public SituacaoFornecedor Situacao { get; set; }
     public int PrazoEntrega { get; set; }
+    public string? Email { get; set; }
 }
 
 public enum SituacaoFornecedor

@@ -98,6 +98,7 @@ public class PedidosCompraController : ControllerBase
 
         pedido.SituacaoPedido = aprovarPedido.Situacao;
         await _entityRepository.UpdateAsync(pedido);
+        await _publishEndpoint.Publish(new SitucaoPedidoChanged(id));
         return Ok();
     }
 
@@ -127,7 +128,7 @@ public class PedidosCompraController : ControllerBase
     }
 
     [HttpGet("{situacao}")]
-    public async Task<ActionResult<IEnumerable<PedidoDto>>> GetPedidosBySituacao(Common.Entities.SituacaoPedidoCompra situacaoPedido)
+    public async Task<ActionResult<IEnumerable<PedidoDto>>> GetPedidosBySituacao(SituacaoPedidoCompra situacaoPedido)
     {
         var pedidos = await _entityRepository.GetAllAsync(pedido => pedido.SituacaoPedido == situacaoPedido);
         var produtos = (await _entityRepositoryProduto.GetAllAsync()).ToDictionary(produto => produto.Id);

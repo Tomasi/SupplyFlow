@@ -1,4 +1,3 @@
-using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using SupplyFlow.Common;
 using SupplyFlow.Common.Entities;
@@ -43,6 +42,7 @@ public class FornecedorController : ControllerBase
         fornecedor.NomeFornecedor = fornecedorDto.NomeFornecedor;
         fornecedor.PrazoEntrega = fornecedorDto.PrazoEntrega;
         fornecedor.Situacao = fornecedorDto.Situacao;
+        fornecedor.Email = fornecedorDto.Email;
 
         await _entityRepository.UpdateAsync(fornecedor);
         return Ok();
