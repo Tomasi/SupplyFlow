@@ -16,7 +16,7 @@ export default function ProdutoSelect({ open, onClose: onClose, onCancel: onCanc
     const [produto, setProduto] = React.useState({});
     async function consultaProdutos()
     {
-        var produtos;
+        let produtos;
         if (fornecedor)
         {
             produtos = await getProdutosByFornecedor(fornecedor.id);

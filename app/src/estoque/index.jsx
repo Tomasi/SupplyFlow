@@ -14,7 +14,7 @@ const Estoque = () =>
 
     async function consultaEstoque()
     {
-        var estoque = await getEstoque();
+        let estoque = await getEstoque();
 
         setRows(estoque.map(estoque => ({
             id: estoque.id,

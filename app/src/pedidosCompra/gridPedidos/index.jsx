@@ -131,7 +131,7 @@ export default function GridPedidos()
 
     async function consultaPedidosCompra()
     {
-        const pedidos = await getPedidosCompra();
+        let pedidos = await getPedidosCompra();
         setRows(pedidos);
     }
 
@@ -148,7 +148,7 @@ export default function GridPedidos()
 
     const OnRowDoubleClick = (params) =>
     {
-        var pedidoSelecionado = rows.find((row) => row.id === params.row.id);
+        let pedidoSelecionado = rows.find((row) => row.id === params.row.id);
         setPedidoSelecionado(pedidoSelecionado);
         console.log("Pedido selecionado", pedidoSelecionado)
         setIsFormOpen(true);

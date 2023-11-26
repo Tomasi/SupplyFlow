@@ -37,7 +37,7 @@ export default function Entrada()
 
     async function consultaFornecedores()
     {
-        var fornecedores = await getFornecedores();
+        let fornecedores = await getFornecedores();
         setFornecedores(fornecedores);
     }
 
@@ -48,7 +48,7 @@ export default function Entrada()
 
     const removeProduto = () =>
     {
-        const updatedRows = produtos.filter((row) => !rowSelectionModel.includes(row.id));
+        let updatedRows = produtos.filter((row) => !rowSelectionModel.includes(row.id));
         setRows(updatedRows);
     };
 
@@ -74,7 +74,7 @@ export default function Entrada()
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
 
-        const editedRow = produtos.find((row) => row.id === id);
+        let editedRow = produtos.find((row) => row.id === id);
         if (editedRow.isNew)
         {
             setItemData(produtos.filter((row) => row.id !== id));
@@ -83,7 +83,7 @@ export default function Entrada()
 
     const onProcessRowUpdate = (newRow) =>
     {
-        const updatedRow = { ...newRow, isNew: false };
+        let updatedRow = { ...newRow, isNew: false };
         setRows(produtos.map((row) => (row.id === newRow.id ? updatedRow : row)));
         return updatedRow;
     };
@@ -92,7 +92,7 @@ export default function Entrada()
     {
         produtos.forEach(item =>
         {
-            var movimentoSaida = {
+            let movimentoSaida = {
                 produto: item.Produto.id,
                 quantidade: item.quantidade,
                 tipoMovimento: 1
@@ -113,7 +113,7 @@ export default function Entrada()
             return;
         }
 
-        var newRowId = Math.max(0, ...produtos.map((row) => row.id)) + 1;
+        let newRowId = Math.max(0, ...produtos.map((row) => row.id)) + 1;
         setRows([...produtos, { id: newRowId, Produto: novoProduto, isNew: true }]);
     };
 

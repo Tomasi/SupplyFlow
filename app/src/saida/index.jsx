@@ -40,7 +40,7 @@ export default function Saida()
 
     const removeProduto = () =>
     {
-        const updatedRows = produtos.filter((row) => !rowSelectionModel.includes(row.id));
+        let updatedRows = produtos.filter((row) => !rowSelectionModel.includes(row.id));
         setRows(updatedRows);
     };
 
@@ -66,7 +66,7 @@ export default function Saida()
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
 
-        const editedRow = produtos.find((row) => row.id === id);
+        let editedRow = produtos.find((row) => row.id === id);
         if (editedRow.isNew)
         {
             setItemData(produtos.filter((row) => row.id !== id));
@@ -75,7 +75,7 @@ export default function Saida()
 
     const onProcessRowUpdate = (newRow) =>
     {
-        const updatedRow = { ...newRow, isNew: false };
+        let updatedRow = { ...newRow, isNew: false };
         setRows(produtos.map((row) => (row.id === newRow.id ? updatedRow : row)));
         return updatedRow;
     };
@@ -84,7 +84,7 @@ export default function Saida()
     {
         produtos.forEach(item =>
         {
-            var movimentoSaida = {
+            let movimentoSaida = {
                 produto: item.Produto.id,
                 quantidade: item.quantidade,
                 tipoMovimento: 2
@@ -105,7 +105,7 @@ export default function Saida()
             return;
         }
 
-        var newRowId = Math.max(0, ...produtos.map((row) => row.id)) + 1;
+        let newRowId = Math.max(0, ...produtos.map((row) => row.id)) + 1;
         setRows([...produtos, { id: newRowId, Produto: novoProduto, isNew: true }]);
     };
 

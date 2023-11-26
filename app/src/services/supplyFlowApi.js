@@ -37,7 +37,7 @@ export const postMovimento = async (movimento) =>
     try 
     {
         console.log("Movimento", movimento)
-        var response = await movimentosService.post('/movimento', movimento)
+        let response = await movimentosService.post('/movimento', movimento)
         return response.data;
     } catch (error)
     {
@@ -50,7 +50,7 @@ export const getFornecedores = async () =>
 {
     try
     {
-        var response = await fornecedoresService.get('/fornecedores');
+        let response = await fornecedoresService.get('/fornecedores');
         return response.data;
     } catch (error)
     {
@@ -63,7 +63,7 @@ export const postPedidoCompra = async (pedidoCompra) =>
 {
     try
     {
-        var response = await pedidosCompraService.post('/pedidosCompra', pedidoCompra);
+        let response = await pedidosCompraService.post('/pedidosCompra', pedidoCompra);
         return response.data;
     } catch (error)
     {
@@ -76,7 +76,7 @@ export const getPedidosCompra = async () =>
 {
     try
     {
-        var response = await pedidosCompraService.get('/pedidosCompra');
+        let response = await pedidosCompraService.get('/pedidosCompra');
         return response.data;
     } catch (error)
     {
@@ -89,7 +89,7 @@ export const getEstoque = async () =>
 {
     try
     {
-        var response = await estoqueService.get('/estoque')
+        let response = await estoqueService.get('/estoque')
         return response.data;
     } catch (error)
     {
@@ -102,7 +102,7 @@ export const putPedidoCompra = async (pedidoCompra, id) =>
 {
     try
     {
-        var response = await pedidosCompraService.put(`/pedidosCompra/${id}`, pedidoCompra);
+        let response = await pedidosCompraService.put(`/pedidosCompra/${id}`, pedidoCompra);
         return response.data;
     } catch (error)
     {
@@ -115,7 +115,7 @@ export const alterarStatus = async (situacao, id) =>
 {
     try
     {
-        var response = await pedidosCompraService.put(`/pedidosCompra/alterarStatus/${id}`, situacao);
+        let response = await pedidosCompraService.put(`/pedidosCompra/alterarStatus/${id}`, situacao);
         return response.data;
     } catch (error)
     {
@@ -128,7 +128,7 @@ export const getProdutos = async (produto) =>
 {
     try
     {
-        var response = await produtosService.get('/produtos');
+        let response = await produtosService.get('/produtos');
         return response.data;
     } catch (error)
     {
@@ -141,7 +141,7 @@ export const getProdutosByFornecedor = async (fornecedorId) =>
 {
     try
     {
-        var response = await produtosService.get(`/produtos/fornecedor?idFornecedor=${fornecedorId}`);
+        let response = await produtosService.get(`/produtos/fornecedor?idFornecedor=${fornecedorId}`);
         return response.data;
     } catch (error)
     {

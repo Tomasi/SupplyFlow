@@ -74,7 +74,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             return;
         }
 
-        const newItem = {
+        let newItem = {
             id: uuidv4(),
             produtoId: novoProduto.id,
             codigoProduto: novoProduto.codigoProduto,
@@ -97,7 +97,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
     {
         if (pedidoCompra)
         {
-            var pedido = {
+            let pedido = {
                 ...pedidoCompra,
                 fornecedor: pedidoCompra.fornecedor,
                 dataEntrega: pedidoCompra.dataEntrega || '',
@@ -123,7 +123,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
     {
         const dataEntregaString = formData.dataEntrega.format("YYYY-MM-DD");
         const dataEntregaDateOnly = dayjs(dataEntregaString).format("YYYY-MM-DD");
-        var pedido = {
+        let pedido = {
             itens: itensPedido.map(item =>
             ({
                 produtoId: item.produtoId,
@@ -138,14 +138,14 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 
     function atualizaPedido()
     {
-        const itens = [];
+        let itens = [];
         itensPedido.forEach((item) =>
         {
             itens.push({ produtoId: item.produtoId, quantidade: item.quantidade });
         });
 
-        const dataEntregaDateOnly = dayjs(formData.dataEntrega).format("YYYY-MM-DD");
-        const pedido = {
+        let dataEntregaDateOnly = dayjs(formData.dataEntrega).format("YYYY-MM-DD");
+        let pedido = {
             itens: itens,
             fornecedor: formData.fornecedor.id,
             observacao: formData.observacao,
@@ -202,7 +202,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 
     const onProcessRowUpdate = (newRow) =>
     {
-        const updatedRow = { ...newRow, isNew: false };
+        let updatedRow = { ...newRow, isNew: false };
         updatedRow.precoTotal = updatedRow.precoUnitario * updatedRow.quantidade
         setItemData(itensPedido.map((row) => (row.id === newRow.id ? updatedRow : row)));
         return updatedRow;
@@ -215,7 +215,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
 
-        const editedRow = itensPedido.find((row) => row.id === id);
+        let editedRow = itensPedido.find((row) => row.id === id);
         if (editedRow.isNew)
         {
             setItemData(itensPedido.filter((row) => row.id !== id));
@@ -269,7 +269,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
             cellClassName: 'actions',
             getActions: ({ id }) =>
             {
-                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+                let isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
                 if (isInEditMode)
                 {
                     return [
