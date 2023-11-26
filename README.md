@@ -25,3 +25,7 @@
 
 - [Diagrama de Sequência Usuário](https://drive.google.com/file/d/10HpHJ4Tb2HKy8uGdD7xmqnosM2g6FF-h/view?usp=sharing)
 - [Diagrama de Sequência Geração Pedidos Automáticos](https://drive.google.com/file/d/1sN6TdM1TAUOIj4k8psJ89cS7fWrN1Ukp/view?usp=sharing)
+
+## Técnologias
+
+## Como contribuir?
