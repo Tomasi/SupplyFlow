@@ -19,7 +19,7 @@ Mantenha o controle completo sobre todos os produtos em seu estoque. O SupplyFlo
 
 ## Contexto
 
-<p align="justify">A aplicação desempenha um papel complementar ao conhecimento do usuário, sendo essencial que o responsável tenha proficiência em gerenciamento de estoque e suas funcionalidades. Trata-se de uma aplicação web responsiva, desenvolvida exclusivamente para este ambiente. Nossa abordagem prioriza características de confiabilidade e facilidade de manutenção, com o objetivo de proporcionar experiências mais satisfatórias no que diz respeito aos negócios e à interação com a aplicação.</p>
+<p align="justify">A aplicação desempenha um papel complementar ao conhecimento do usuário, sendo essencial que o responsável tenha proficiência em gerenciamento de estoque e suas funcionalidades. Trata-se de uma aplicação web, desenvolvida exclusivamente para este ambiente. Nossa abordagem prioriza características de confiabilidade e facilidade de manutenção, com o objetivo de proporcionar experiências mais satisfatórias no que diz respeito aos negócios e à interação com a aplicação.</p>
 
 ## Restrições
 
