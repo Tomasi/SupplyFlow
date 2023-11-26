@@ -8,10 +8,10 @@ on:
     branches:
       - master
     paths:
-      # - './services/src/SupplyFlow.PedidosCompra/**'
-      - './services/src/SupplyFlow.Email/**'
-      # - './common/**'
-      # - './contracts/**'
+      - 'services/src/SupplyFlow.PedidosCompra/**'
+      - 'services/src/SupplyFlow.Email/**'
+      - 'common/**'
+      - 'contracts/**'
   workflow_dispatch:
 
 jobs:
