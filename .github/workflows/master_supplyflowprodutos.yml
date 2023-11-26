@@ -9,6 +9,8 @@ on:
       - master
     paths:
       - './services/src/SupplyFlow.Produtos/**/*'
+      - './common/**/*'
+      - './contracts/**/*'
   workflow_dispatch:
 
 jobs:
