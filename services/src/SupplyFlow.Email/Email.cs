@@ -54,7 +54,7 @@ public class Email
 
     private async Task<bool> VerificaEmailValido(string enderecoFrom, string enderecoDestino)
     {
-        Regex expression = new(@"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$");
+        Regex expression = new(@"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$", RegexOptions.None, TimeSpan.FromSeconds(2));
         bool resultadoFrom = await Task.Run(() => expression.IsMatch(enderecoFrom));
         bool resultadoDestino = await Task.Run(() => expression.IsMatch(enderecoDestino));
 
