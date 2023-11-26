@@ -30,6 +30,10 @@
 
 - C#
 - Dotnet 7
+- Ract
+- Vite.js
+- RabbitMq
+- MongoDB
 
 ## Contribuição
 
