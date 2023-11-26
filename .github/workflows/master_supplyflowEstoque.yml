@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - './services/src/SupplyFlow.Estoque/**/*'
   workflow_dispatch:
 
 jobs:
