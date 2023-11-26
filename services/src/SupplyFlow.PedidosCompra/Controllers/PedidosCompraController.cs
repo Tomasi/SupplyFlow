@@ -135,7 +135,7 @@ public class PedidosCompraController : ControllerBase
         return Ok(pedidos?.Select(pedido =>
         {
             var itensPedido = new List<ItemPedidoDto>();
-            foreach (var item in pedido.Itens)
+            foreach (var item in pedido?.Itens)
             {
                 var itemPedido = item.AsDto(produtos[item.Produto.Id]);
                 itensPedido.Add(itemPedido);
