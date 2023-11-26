@@ -156,31 +156,19 @@ export default function GridPedidos()
 
     var onAprovacaoClick = () =>
     {
-        try
+        if (!rowSelectionModel) return
+        for (var id of rowSelectionModel)
         {
-            if (!rowSelectionModel) return
-            for (var id of rowSelectionModel)
-            {
-                alterarStatus({ situacao: 2 }, id);
-            }
-        } catch (error)
-        {
-            console.error('Erro ao aprovar pedido:', error);
+            alterarStatus({ situacao: 2 }, id);
         }
     }
 
     var onReprovacaoClick = () =>
     {
-        try
+        if (!rowSelectionModel) return
+        for (var id of rowSelectionModel)
         {
-            if (!rowSelectionModel) return
-            for (var id of rowSelectionModel)
-            {
-                alterarStatus({ situacao: 3 }, id);
-            }
-        } catch (error)
-        {
-            console.error('Erro ao reprovar pedido:', error);
+            alterarStatus({ situacao: 3 }, id);
         }
     }
 

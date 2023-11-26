@@ -47,11 +47,11 @@ public class MovimentoCreatedClientPedidosCompra : IConsumer<MovimentoCreated>
         var pontoRessuprimento = (mediaSaidas * tempoEntreCompras) + estoqueSeguranca;
         if (estoqueProduto.Quantidade <= pontoRessuprimento)
         {
-            GeraNovoPedido(produtoMovimento, pontoRessuprimento.GetValueOrDefault(), estoqueSeguranca.GetValueOrDefault());
+            await GeraNovoPedido(produtoMovimento, pontoRessuprimento.GetValueOrDefault(), estoqueSeguranca.GetValueOrDefault());
         }
     }
 
-    private async void GeraNovoPedido(Produto produto, int pontoRessuprimento, int estoqueSeguranca)
+    private async Task GeraNovoPedido(Produto produto, int pontoRessuprimento, int estoqueSeguranca)
     {
         var pedidos = await _repositoryPedidoCompra.GetAllAsync();
         long ultimoPedido = !pedidos.Any() ? 0 : pedidos.Max(pedido => pedido.NumeroPedido);
