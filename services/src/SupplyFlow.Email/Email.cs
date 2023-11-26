@@ -18,7 +18,7 @@ public class Email
         if (_emailSettings == null)
             return;
 
-        if (!await VerificaEmailValido(_emailSettings?.From, parametros?.EnderecoDestino))
+        if (!await VerificaEmailValido(_emailSettings.From, parametros.EnderecoDestino))
             return;
 
         MailMessage email = new(_emailSettings.From, parametros.EnderecoDestino)
