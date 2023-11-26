@@ -26,6 +26,13 @@
 - [Diagrama de Sequência Usuário](https://drive.google.com/file/d/10HpHJ4Tb2HKy8uGdD7xmqnosM2g6FF-h/view?usp=sharing)
 - [Diagrama de Sequência Geração Pedidos Automáticos](https://drive.google.com/file/d/1sN6TdM1TAUOIj4k8psJ89cS7fWrN1Ukp/view?usp=sharing)
 
+## Como a aplicação esta hospedada
+
+- API's estão publicadas no <b>Azure</b> com pipeline de entrega automática ao realizar o push na branch main.
+- Banco de dados esta hospeda em um cluster no AtlasDB
+- RabbitMQ está hospedado em <b>CloudAMQP</b>
+- Aplicação Web esta hospedada no Vercel
+
 ## Técnologias
 
 - C#
