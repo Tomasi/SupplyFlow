@@ -140,7 +140,7 @@ export default function GridPedidos()
         setIsFormOpen(false);
     };
 
-    var OnNovoPedidoClick = () =>
+    const OnNovoPedidoClick = () =>
     {
         setPedidoSelecionado(null)
         setIsFormOpen(true);
@@ -154,19 +154,19 @@ export default function GridPedidos()
         setIsFormOpen(true);
     };
 
-    var onAprovacaoClick = () =>
+    const onAprovacaoClick = () =>
     {
         if (!rowSelectionModel) return
-        for (var id of rowSelectionModel)
+        for (let id of rowSelectionModel)
         {
             alterarStatus({ situacao: 2 }, id);
         }
     }
 
-    var onReprovacaoClick = () =>
+    const onReprovacaoClick = () =>
     {
         if (!rowSelectionModel) return
-        for (var id of rowSelectionModel)
+        for (let id of rowSelectionModel)
         {
             alterarStatus({ situacao: 3 }, id);
         }
