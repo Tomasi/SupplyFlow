@@ -8,9 +8,9 @@ on:
     branches:
       - master
     paths:
-      - './services/src/SupplyFlow.Estoque/**/*'
-      - './common/**/*'
-      - './contracts/**/*'
+      - 'services/src/SupplyFlow.Estoque/**'
+      - 'common/**/*'
+      - 'contracts/**/*'
   workflow_dispatch:
 
 jobs:
