@@ -28,7 +28,7 @@
 
 ## Como a aplicação esta hospedada?
 
-- API's estão publicadas no <b>Azure</b> com pipeline de entrega automática ao realizar o push na branch main.
+- API's estão publicadas no <b>Azure</b> com pipeline de entrega automática ao realizar o push na branch main
 - Banco de dados esta hospeda em um cluster no AtlasDB
 - RabbitMQ está hospedado em <b>CloudAMQP</b>
 - Aplicação Web esta hospedada no Vercel
