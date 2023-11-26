@@ -28,4 +28,15 @@
 
 ## Técnologias
 
+- C#
+- Dotnet 7
+
 ## Como contribuir?
+
+O projeto segue o critério Open Source, então sinta-se livre para verificar possíveis ajustes e novos implementos. Para executar o projeto e contribuir você deve realizar alguns passos, aqui estão eles:
+
+### Como executar?
+
+
+
+
