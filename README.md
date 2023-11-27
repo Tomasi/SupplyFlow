@@ -33,6 +33,13 @@
 - RabbitMQ está hospedado em <b>CloudAMQP</b>
 - Aplicação Web esta hospedada no [Vercel](https://supply-flow.vercel.app/)
 
+## Ferramenta de Análise de Código
+
+Para a análise de código é utilizado o Sonar Clound, atualmente com qualidade de código aprovada para produção.
+
+![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/ee8e0350-acf4-4490-8a5e-eab3e93ef472)
+
+
 ## Técnologias
 
 - C#
@@ -41,6 +48,7 @@
 - Vite.js
 - RabbitMq
 - MongoDB
+- Mui
 
 ## Contribuição
 
