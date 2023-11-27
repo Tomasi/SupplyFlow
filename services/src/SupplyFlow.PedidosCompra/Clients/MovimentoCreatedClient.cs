@@ -30,7 +30,7 @@ public class MovimentoCreatedClientPedidosCompra : IConsumer<MovimentoCreated>
         CalculaPontoRessuprimento(movimento);
     }
 
-    private async void CalculaPontoRessuprimento(Movimento movimento)
+    public async void CalculaPontoRessuprimento(Movimento movimento)
     {
         var produtoMovimento = movimento.Produto;
         var estoqueProduto = await _repositoryEstoque.GetAsync(estoque => estoque.Produto.Id == produtoMovimento.Id);
@@ -78,20 +78,20 @@ public class MovimentoCreatedClientPedidosCompra : IConsumer<MovimentoCreated>
     private int RetornaMediaSaidasMes(IEnumerable<Movimento> saidas)
     {
         var totalVendas = saidas.Sum(saida => saida.Quantidade);
-        var mediaVendas = totalVendas / 30;
+        var mediaVendas = Convert.ToInt32(totalVendas / 30);
         return mediaVendas;
     }
 
     private int RetornaTempoEntreComprasMes(IEnumerable<Movimento> compras)
     {
         int totalDiasEntreCompras = 0;
-        Movimento ultimoMovimento = null;
+        Movimento? ultimoMovimento = null;
         foreach (var compra in compras)
         {
             if (ultimoMovimento != null)
             {
-                var diferencaEntreEntregas = Math.Abs((compra.DataMovimento - ultimoMovimento.DataMovimento).Days);
-                totalDiasEntreCompras += Convert.ToInt32(diferencaEntreEntregas);
+                var diferencaEntreEntregas = (compra.DataMovimento - ultimoMovimento.DataMovimento).Days;
+                totalDiasEntreCompras += diferencaEntreEntregas;
             }
             ultimoMovimento = compra;
         }
