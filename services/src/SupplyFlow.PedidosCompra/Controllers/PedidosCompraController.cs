@@ -97,6 +97,10 @@ public class PedidosCompraController : ControllerBase
             return BadRequest();
 
         pedido.SituacaoPedido = aprovarPedido.Situacao;
+        if (pedido.SituacaoPedido == SituacaoPedidoCompra.Aprovado)
+        {
+            pedido.DataAprovacao = DateOnly.FromDateTime(DateTime.Now);
+        }
         await _entityRepository.UpdateAsync(pedido);
         await _publishEndpoint.Publish(new SitucaoPedidoChanged(id));
         return Ok();
