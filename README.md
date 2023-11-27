@@ -28,10 +28,17 @@
 
 ## Como a aplicação esta hospedada?
 
-- API's estão publicadas no <b>Azure</b> com pipeline de entrega automática ao realizar o push na branch main
+- API's estão publicadas no <b>Azure</b> com CD através de pipeline
 - Banco de dados esta hospeda em um cluster no AtlasDB
 - RabbitMQ está hospedado em <b>CloudAMQP</b>
-- Aplicação Web esta hospedada no Vercel
+- Aplicação Web esta hospedada no [Vercel](https://supply-flow.vercel.app/)
+
+## Ferramenta de Análise de Código
+
+Para a análise de código é utilizado o Sonar Clound, atualmente com qualidade de código aprovada para produção.
+
+![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/ee8e0350-acf4-4490-8a5e-eab3e93ef472)
+
 
 ## Técnologias
 
@@ -41,6 +48,7 @@
 - Vite.js
 - RabbitMq
 - MongoDB
+- Mui
 
 ## Contribuição
 
