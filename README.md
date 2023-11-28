@@ -1,6 +1,6 @@
 # SupplyFlow
 
-Para conhecer mais sobre o produto, acesse nossa página na [Wiki](https://github.com/Tomasi/SupplyFlow/wiki).
+Para conhecer mais sobre o produto, acesse a página da [Wiki](https://github.com/Tomasi/SupplyFlow/wiki).
 
 ## C4 Model
 
