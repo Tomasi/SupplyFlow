@@ -56,7 +56,7 @@ Para monitoramento da aplicação é utilizado a ferramente de monitoramento do 
 
 ## Contribuição
 
-O projeto segue o critério Open Source, então sinta-se livre para verificar possíveis ajustes e novos implementos. Para executar o projeto e contribuir você deve realizar alguns passos, aqui estão eles:
+O projeto segue o critério Open Source, então sinta-se livre para verificar possíveis ajustes e novos implementos. Para executar o projeto e contribuir você deve realizar alguns passos e aqui estão eles:
 
 ### Como executar?
 
