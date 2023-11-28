@@ -34,15 +34,19 @@ Para conhecer mais sobre o produto, acesse nossa página na [Wiki](https://githu
 - RabbitMQ está hospedado em <b>CloudAMQP</b>
 - Aplicação Web esta hospedada no [Vercel](https://supply-flow.vercel.app/)
 
-## Ferramenta de Análise de Código
+## Ferramenta de Análise e Monitoramento
 
 Para a análise de código é utilizado o Sonar Clound, atualmente com qualidade de código aprovada para produção.
 
 ![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/ee8e0350-acf4-4490-8a5e-eab3e93ef472)
 
-Para monitoramento da aplicação é utilizado a ferramente de monitoramento do Vercel.
+Para monitoramento da aplicação Web é utilizado a ferramente de monitoramento do Vercel.
 
 ![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/9251ad6d-5cab-4229-b296-70bb1100337b)
+
+Para monitoramento de API's é usado Azure Insights
+
+![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/060648f9-bd22-401e-b545-57f0c27140ed)
 
 ## Técnologias
 
