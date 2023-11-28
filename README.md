@@ -1,5 +1,7 @@
 # SupplyFlow
 
+Para conhecer mais sobre o produto, acesse nossa página na Wiki.
+
 ## C4 Model
 
 - [(C4Model.Contexto)](https://drive.google.com/file/d/1VSJ5fRvzJEzwLn7JBGe3nAu40cpLjjBe/view?usp=drive_link)
@@ -22,7 +24,6 @@
 ## Diagramas UML
 
 - [Cados de Uso](https://drive.google.com/file/d/13gdoXdUy9TaRNPD85DMjGmPWb4XYUIg-/view?usp=sharing)
-
 - [Diagrama de Sequência Usuário](https://drive.google.com/file/d/10HpHJ4Tb2HKy8uGdD7xmqnosM2g6FF-h/view?usp=sharing)
 - [Diagrama de Sequência Geração Pedidos Automáticos](https://drive.google.com/file/d/1sN6TdM1TAUOIj4k8psJ89cS7fWrN1Ukp/view?usp=sharing)
 
@@ -39,6 +40,9 @@ Para a análise de código é utilizado o Sonar Clound, atualmente com qualidade
 
 ![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/ee8e0350-acf4-4490-8a5e-eab3e93ef472)
 
+Para monitoramento da aplicação é utilizado a ferramente de monitoramento do Vercel.
+
+![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/9251ad6d-5cab-4229-b296-70bb1100337b)
 
 ## Técnologias
 
