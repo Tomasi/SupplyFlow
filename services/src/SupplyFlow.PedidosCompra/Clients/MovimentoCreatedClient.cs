@@ -35,20 +35,21 @@ public class MovimentoCreatedClientPedidosCompra : IConsumer<MovimentoCreated>
         if (estoque == null || !saidasProduto.Any() || !comprasProdutos.Any())
             return;
 
-        CalculaPontoRessuprimento(new ParametrosCalculoRessuprimento(saidasProduto, comprasProdutos, produto, estoque));
+        var pontoRessuprimento = CalculaPontoRessuprimento(new ParametrosCalculoRessuprimento(saidasProduto, comprasProdutos, produto, estoque));
+        if (estoque.Quantidade <= pontoRessuprimento)
+        {
+            await GeraNovoPedido(produto, pontoRessuprimento.GetValueOrDefault(), pontoRessuprimento.GetValueOrDefault());
+        }
     }
 
-    public async void CalculaPontoRessuprimento(ParametrosCalculoRessuprimento parametros)
+    public int? CalculaPontoRessuprimento(ParametrosCalculoRessuprimento parametros)
     {
         var mediaSaidas = RetornaMediaSaidasMes(parametros.SaidasProdutos);
         var tempoEntreCompras = RetornaTempoEntreComprasMes(parametros.ComprasProdutos);
         var estoqueSeguranca = mediaSaidas * parametros.Produto.Fornecedor?.PrazoEntrega;
 
         var pontoRessuprimento = (mediaSaidas * tempoEntreCompras) + estoqueSeguranca;
-        if (parametros.Estoque.Quantidade <= pontoRessuprimento)
-        {
-            await GeraNovoPedido(parametros.Produto, pontoRessuprimento.GetValueOrDefault(), estoqueSeguranca.GetValueOrDefault());
-        }
+        return pontoRessuprimento;
     }
 
     public class ParametrosCalculoRessuprimento
