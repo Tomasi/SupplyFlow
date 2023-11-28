@@ -27,28 +27,44 @@ public class MovimentoCreatedClientPedidosCompra : IConsumer<MovimentoCreated>
         if (movimento == null || movimento.TipoMovimento == TipoMovimento.Entrada)
             return;
 
-        CalculaPontoRessuprimento(movimento);
-    }
+        var produto = movimento.Produto;
+        var estoque = await _repositoryEstoque.GetAsync(estoque => estoque.Produto.Id == produto.Id);
+        var saidasProduto = await _repositoryMovimento.GetAllAsync(movimento => movimento.Produto.Id == produto.Id && movimento.TipoMovimento == TipoMovimento.Saida && movimento.DataMovimento >= DateTime.Now.AddDays(-30));
+        var comprasProdutos = await _repositoryMovimento.GetAllAsync(movimento => movimento.Produto.Id == produto.Id && movimento.TipoMovimento == TipoMovimento.Entrada && movimento.DataMovimento >= DateTime.Now.AddDays(-30));
 
-    public async void CalculaPontoRessuprimento(Movimento movimento)
-    {
-        var produtoMovimento = movimento.Produto;
-        var estoqueProduto = await _repositoryEstoque.GetAsync(estoque => estoque.Produto.Id == produtoMovimento.Id);
-        var saidasProduto = await _repositoryMovimento.GetAllAsync(movimento => movimento.Produto.Id == produtoMovimento.Id && movimento.TipoMovimento == TipoMovimento.Saida && movimento.DataMovimento >= DateTime.Now.AddDays(-30));
-        var comprasProdutos = await _repositoryMovimento.GetAllAsync(movimento => movimento.Produto.Id == produtoMovimento.Id && movimento.TipoMovimento == TipoMovimento.Entrada && movimento.DataMovimento >= DateTime.Now.AddDays(-30));
-
-        if (estoqueProduto == null || !saidasProduto.Any() || !comprasProdutos.Any())
+        if (estoque == null || !saidasProduto.Any() || !comprasProdutos.Any())
             return;
 
-        var mediaSaidas = RetornaMediaSaidasMes(saidasProduto);
-        var tempoEntreCompras = RetornaTempoEntreComprasMes(comprasProdutos);
-        var estoqueSeguranca = mediaSaidas * produtoMovimento.Fornecedor?.PrazoEntrega;
+        CalculaPontoRessuprimento(new ParametrosCalculoRessuprimento(saidasProduto, comprasProdutos, produto, estoque));
+    }
+
+    public async void CalculaPontoRessuprimento(ParametrosCalculoRessuprimento parametros)
+    {
+        var mediaSaidas = RetornaMediaSaidasMes(parametros.SaidasProdutos);
+        var tempoEntreCompras = RetornaTempoEntreComprasMes(parametros.ComprasProdutos);
+        var estoqueSeguranca = mediaSaidas * parametros.Produto.Fornecedor?.PrazoEntrega;
 
         var pontoRessuprimento = (mediaSaidas * tempoEntreCompras) + estoqueSeguranca;
-        if (estoqueProduto.Quantidade <= pontoRessuprimento)
+        if (parametros.Estoque.Quantidade <= pontoRessuprimento)
         {
-            await GeraNovoPedido(produtoMovimento, pontoRessuprimento.GetValueOrDefault(), estoqueSeguranca.GetValueOrDefault());
+            await GeraNovoPedido(parametros.Produto, pontoRessuprimento.GetValueOrDefault(), estoqueSeguranca.GetValueOrDefault());
         }
+    }
+
+    public class ParametrosCalculoRessuprimento
+    {
+        public ParametrosCalculoRessuprimento(IEnumerable<Movimento> saidasProduto, IEnumerable<Movimento> comprasProdutos, Produto produto, Estoque estoque)
+        {
+            this.SaidasProdutos = saidasProduto;
+            this.ComprasProdutos = comprasProdutos;
+            this.Produto = produto;
+            this.Estoque = estoque;
+        }
+
+        public IEnumerable<Movimento> SaidasProdutos { get; set; }
+        public IEnumerable<Movimento> ComprasProdutos { get; set; }
+        public Produto Produto { get; set; }
+        public Estoque Estoque { get; set; }
     }
 
     private async Task GeraNovoPedido(Produto produto, int pontoRessuprimento, int estoqueSeguranca)
