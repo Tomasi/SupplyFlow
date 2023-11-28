@@ -67,6 +67,7 @@ O projeto segue o critério Open Source, então sinta-se livre para verificar po
 - Crie um fork do projeto
 - Instale o pacote SDK do .net 7 (https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - Instale o pacote node 20.10 LTS (https://nodejs.org/en)
+- Alterações em páginas web devem usar componentes disponibilizados no [Mui](https://mui.com/)
 - Para facilitar o uso do MongoDB e RabbitMQ em seu ambiente instale o docker (https://www.docker.com/products/docker-desktop/) e em seguida execute o comando <b>docker-compose up</b> no arquivo <b>infra/docker-compose.yml</b> isso irá subir as imagens do docker e RabbitMQ em seu local host, se necessário mude as portas das imagens no arquivo específicado
 
 
