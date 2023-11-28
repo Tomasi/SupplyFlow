@@ -44,7 +44,7 @@ Para monitoramento da aplicação Web é utilizado a ferramente de monitoramento
 
 ![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/9251ad6d-5cab-4229-b296-70bb1100337b)
 
-Para monitoramento de API's é usado Azure Insights
+Para monitoramento de API's é usado Azure Insights.
 
 ![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/060648f9-bd22-401e-b545-57f0c27140ed)
 
