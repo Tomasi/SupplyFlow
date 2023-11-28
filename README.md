@@ -29,10 +29,10 @@ Para conhecer mais sobre o produto, acesse nossa página na [Wiki](https://githu
 
 ## Como a aplicação esta hospedada?
 
-- API's estão publicadas no <b>Azure</b> com CD através de pipeline
-- Banco de dados esta hospeda em um cluster no AtlasDB
-- RabbitMQ está hospedado em <b>CloudAMQP</b>
-- Aplicação Web esta hospedada no [Vercel](https://supply-flow.vercel.app/)
+- API's estão publicadas no [Azure](https://azure.microsoft.com/en-us/free/search/?ef_id=_k_CjwKCAiAvJarBhA1EiwAGgZl0MbmxnBYJU7_BHz5aPO5A585mV3WoKedHhvU4e3_Q5z3a5U73PMmNhoCnFgQAvD_BwE_k_&OCID=AIDcmmzmnb0182_SEM__k_CjwKCAiAvJarBhA1EiwAGgZl0MbmxnBYJU7_BHz5aPO5A585mV3WoKedHhvU4e3_Q5z3a5U73PMmNhoCnFgQAvD_BwE_k_&gad_source=1&gclid=CjwKCAiAvJarBhA1EiwAGgZl0MbmxnBYJU7_BHz5aPO5A585mV3WoKedHhvU4e3_Q5z3a5U73PMmNhoCnFgQAvD_BwE) com integração continua via GitHub
+- Banco de dados em [AtlasDB](https://www.mongodb.com/)
+- Controle de mensagerias via RabbitMQ em [CloudAMQP](https://www.cloudamqp.com/)
+- Aplicação Web em [Vercel](https://supply-flow.vercel.app/)
 
 ## Ferramenta de Análise e Monitoramento
 
@@ -67,7 +67,7 @@ O projeto segue o critério Open Source, então sinta-se livre para verificar po
 - Crie um fork do projeto
 - Instale o pacote SDK do .net 7 (https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - Instale o pacote node 20.10 LTS (https://nodejs.org/en)
-- Para facilitar o uso do MongoDB e RabbitMQ em seu ambiente instale o docker (https://www.docker.com/products/docker-desktop/). Execute o comando <b>docker-compose up</b> no arquivo <b>infra/docker-compose.yml</b> isso irá subir as imagens do docker e RabbitMQ em seu local host, se necessário mude as portas das imagens no arquivo específicado.
+- Para facilitar o uso do MongoDB e RabbitMQ em seu ambiente instale o docker (https://www.docker.com/products/docker-desktop/) e em seguida execute o comando <b>docker-compose up</b> no arquivo <b>infra/docker-compose.yml</b> isso irá subir as imagens do docker e RabbitMQ em seu local host, se necessário mude as portas das imagens no arquivo específicado
 
 
 
