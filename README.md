@@ -36,7 +36,7 @@ Para conhecer mais sobre o produto, acesse nossa página na [Wiki](https://githu
 
 ## Ferramenta de Análise e Monitoramento
 
-Para a análise de código é utilizado o Sonar Clound, atualmente com qualidade de código aprovada para produção.
+Para a análise de código é utilizado o [Sonar Clound](https://sonarcloud.io/project/overview?id=Tomasi_SupplyFlow), atualmente com qualidade de código aprovada para produção.
 
 ![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/ee8e0350-acf4-4490-8a5e-eab3e93ef472)
 
