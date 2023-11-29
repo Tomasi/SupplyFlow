@@ -103,7 +103,7 @@ public class MovimentoCreatedClientPedidosCompra : IConsumer<MovimentoCreated>
     {
         int totalDiasEntreCompras = 0;
         Movimento? ultimoMovimento = null;
-        foreach (var compra in compras)
+        foreach (var compra in compras.OrderBy(x => x.DataMovimento))
         {
             if (ultimoMovimento != null)
             {

@@ -28,10 +28,10 @@ public class Email
             IsBodyHtml = parametros.IsHtml
         };
 
-        await EnviaEmailBySmtp(email, parametros);
+        await EnviaEmailBySmtp(email);
     }
 
-    private async Task EnviaEmailBySmtp(MailMessage email, ParametrosEnvioEmail parametros)
+    private async Task EnviaEmailBySmtp(MailMessage email)
     {
 
         SmtpClient smtpClient = new()
