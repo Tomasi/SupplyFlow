@@ -27,6 +27,37 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: true
 
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner  
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        run: dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
+
+      - name: Install project dependencies
+        run: dotnet restore
+
+      - name: Test and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:"tomasi_esbc" /o:"tomasi" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet test ./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/SupplyFlow.Testes.PedidosCompra.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx
+          ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      
       - name: Build with dotnet
         run: dotnet build --configuration Release ./services/src/SupplyFlow.PedidosCompra
 
