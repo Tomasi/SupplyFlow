@@ -54,9 +54,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"Tomasi_SupplyFlow" /o:"tomasi" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet test ./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/SupplyFlow.Testes.PedidosCompra.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx
-          ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner begin /k:"Tomasi_SupplyFlow" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+          dotnet build ./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/SupplyFlow.Testes.PedidosCompra.csproj          
+          dotnet test ./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/SupplyFlow.Testes.PedidosCompra.csproj
+          coverlet ./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/bin/SupplyFlow.Testes.PedidosCompra.dll
+              --target "dotnet" 
+              --targetargs "test --no-build"
+              -f=opencover 
+              -o="coverage.xml"
+          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
       
       - name: Build with dotnet
         run: dotnet build --configuration Release ./services/src/SupplyFlow.PedidosCompra
