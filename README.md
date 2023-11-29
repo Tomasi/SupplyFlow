@@ -1,6 +1,6 @@
 # SupplyFlow
 
-Para conhecer mais sobre o produto, acesse nossa página na [Wiki](https://github.com/Tomasi/SupplyFlow/wiki).
+Para conhecer mais sobre o produto, acesse a página da [Wiki](https://github.com/Tomasi/SupplyFlow/wiki).
 
 ## C4 Model
 
@@ -36,7 +36,7 @@ Para conhecer mais sobre o produto, acesse nossa página na [Wiki](https://githu
 
 ## Ferramenta de Análise e Monitoramento
 
-Para a análise de código é utilizado o Sonar Clound, atualmente com qualidade de código aprovada para produção.
+Para a análise de código é utilizado o [Sonar Clound](https://sonarcloud.io/project/overview?id=Tomasi_SupplyFlow), atualmente com qualidade de código aprovada para produção.
 
 ![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/ee8e0350-acf4-4490-8a5e-eab3e93ef472)
 
@@ -48,7 +48,7 @@ Para monitoramento de API's é usado Azure Insights.
 
 ![image](https://github.com/Tomasi/SupplyFlow/assets/61890715/060648f9-bd22-401e-b545-57f0c27140ed)
 
-## Técnologias
+## Tecnologias
 
 - C#
 - Dotnet 7
