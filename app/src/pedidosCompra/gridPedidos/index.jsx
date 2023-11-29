@@ -138,7 +138,6 @@ export default function GridPedidos()
     const onCloseDialog = () =>
     {
         setIsFormOpen(false);
-        window.location.reload();
     };
 
     const OnNovoPedidoClick = () =>
