@@ -38,12 +38,12 @@ public class SituacaoPedidoChangedClient : IConsumer<SitucaoPedidoChanged>
             Assunto = $"Pedido de compra {pedidoCompra.NumeroPedido} aprovado!",
             EnderecoDestino = pedidoCompra.Fornecedor == null ? $"" : $"{pedidoCompra.Fornecedor.Email}",
             IsHtml = true,
-            Corpo = await GerarCoporMensagem(pedidoCompra.Itens),
+            Corpo = await GerarCorpoMensagem(pedidoCompra.Itens),
         };
         _ = email.EnviaEmail(parametrosEnvioEmail);
     }
 
-    public async Task<string> GerarCoporMensagem(List<ItemPedido>? itens)
+    public async Task<string> GerarCorpoMensagem(List<ItemPedido>? itens)
     {
         if (itens == null || itens.Count == 0)
             return "";
