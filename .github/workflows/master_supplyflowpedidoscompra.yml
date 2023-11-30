@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"Tomasi_SupplyFlow" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/TestResults/coverage.cobertura.xml"
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:"Tomasi_SupplyFlow" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="coverage.xml"
           dotnet build ./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/SupplyFlow.Testes.PedidosCompra.csproj          
           dotnet test ./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/SupplyFlow.Testes.PedidosCompra.csproj
           coverlet ./services/src/SupplyFlow.Testes/SupplyFlow.Testes.PedidosCompra/bin/SupplyFlow.Testes.PedidosCompra.dll
