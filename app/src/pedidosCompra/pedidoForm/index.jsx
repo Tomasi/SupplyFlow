@@ -89,7 +89,7 @@ export default function PedidoForm({ open, onClose: onClose, pedidoCompra })
 
     async function consultaFornecedores()
     {
-        var fornecedores = await getFornecedores();
+        let fornecedores = await getFornecedores();
         setFornecedores(fornecedores);
     }
 
