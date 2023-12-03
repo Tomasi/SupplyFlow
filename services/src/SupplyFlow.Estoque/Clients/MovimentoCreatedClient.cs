@@ -10,12 +10,14 @@ public class MovimentoCreatedClientEstoque : IConsumer<MovimentoCreated>
 
     private readonly IRepository<Common.Entities.Estoque> _repositoryEstoque;
     private readonly IRepository<Movimento> _repositoryMovimento;
+    private readonly IPublishEndpoint _publishEndPoint;
     private IMovimentoEstoque _movimentaEstoque;
 
-    public MovimentoCreatedClientEstoque(IRepository<Common.Entities.Estoque> repositoryEstoque, IRepository<Movimento> repositoryMovimento)
+    public MovimentoCreatedClientEstoque(IRepository<Common.Entities.Estoque> repositoryEstoque, IRepository<Movimento> repositoryMovimento, IPublishEndpoint publishEndPoint)
     {
         this._repositoryEstoque = repositoryEstoque;
         this._repositoryMovimento = repositoryMovimento;
+        this._publishEndPoint = publishEndPoint;
         this._movimentaEstoque = new GeraMovimentacaoEstoque();
     }
 
@@ -40,5 +42,9 @@ public class MovimentoCreatedClientEstoque : IConsumer<MovimentoCreated>
 
         _movimentaEstoque.IncrementaEstoque(movimento, estoque);
         await _repositoryEstoque.UpdateAsync(estoque);
+        if (movimento.TipoMovimento == TipoMovimento.Saida)
+        {
+            await _publishEndPoint.Publish<EstoqueChanged>(estoque.Produto.Id);
+        }
     }
 }

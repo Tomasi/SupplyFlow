@@ -5,29 +5,30 @@ using SupplyFlow.Contracts;
 
 namespace SupplyFlow.Service.PedidosCompra.Clients;
 
-public class MovimentoCreatedClientPedidosCompra : IConsumer<MovimentoCreated>
+public class EstoqueChangedClientEstoque : IConsumer<EstoqueChanged>
 {
 
     private readonly IRepository<Estoque> _repositoryEstoque;
     private readonly IRepository<Movimento> _repositoryMovimento;
     private readonly IRepository<PedidoCompra> _repositoryPedidoCompra;
+    private readonly IRepository<Produto> _repositoryProduto;
 
-    public MovimentoCreatedClientPedidosCompra(IRepository<Estoque> repositoryEstoque, IRepository<Movimento> repositoryMovimento, IRepository<PedidoCompra> repositoryPedidoCompra)
+    public EstoqueChangedClientEstoque(IRepository<Estoque> repositoryEstoque, IRepository<Movimento> repositoryMovimento, IRepository<PedidoCompra> repositoryPedidoCompra, IRepository<Produto> repositoryProduto)
     {
         this._repositoryEstoque = repositoryEstoque;
         this._repositoryMovimento = repositoryMovimento;
         this._repositoryPedidoCompra = repositoryPedidoCompra;
+        this._repositoryProduto = repositoryProduto;
     }
 
-    public async Task Consume(ConsumeContext<MovimentoCreated> context)
+    public async Task Consume(ConsumeContext<EstoqueChanged> context)
     {
         var message = context.Message;
-        var movimento = await _repositoryMovimento.GetAsync(message.Id);
+        var produto = await _repositoryProduto.GetAsync(message.IdProduto);
 
-        if (movimento == null || movimento.TipoMovimento == TipoMovimento.Entrada)
+        if (produto == null)
             return;
 
-        var produto = movimento.Produto;
         var estoque = await _repositoryEstoque.GetAsync(estoque => estoque.Produto.Id == produto.Id);
         var saidasProduto = await _repositoryMovimento.GetAllAsync(movimento => movimento.Produto.Id == produto.Id && movimento.TipoMovimento == TipoMovimento.Saida && movimento.DataMovimento >= DateTime.Now.AddDays(-30));
         var comprasProdutos = await _repositoryMovimento.GetAllAsync(movimento => movimento.Produto.Id == produto.Id && movimento.TipoMovimento == TipoMovimento.Entrada && movimento.DataMovimento >= DateTime.Now.AddDays(-30));

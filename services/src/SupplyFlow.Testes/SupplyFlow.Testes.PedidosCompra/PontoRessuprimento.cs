@@ -71,9 +71,9 @@ public class PontoRessuprimento
             TipoMovimento = TipoMovimento.Saida
         });
 
-        MovimentoCreatedClientPedidosCompra.ParametrosCalculoRessuprimento parametros = new(movimentosSaida, movimentosEntrada, produto, estoque);
-        MovimentoCreatedClientPedidosCompra movimentoCreatedClient = new(null, null, null);
-        var pontoRessuprimento = movimentoCreatedClient.CalculaPontoRessuprimento(parametros);
+        EstoqueChangedClientEstoque.ParametrosCalculoRessuprimento parametros = new(movimentosSaida, movimentosEntrada, produto, estoque);
+        EstoqueChangedClientEstoque EstoqueCreatedClient = new(null, null, null, null);
+        var pontoRessuprimento = EstoqueCreatedClient.CalculaPontoRessuprimento(parametros);
         Assert.NotNull(pontoRessuprimento);
         Assert.Equal(56, pontoRessuprimento);
     }
