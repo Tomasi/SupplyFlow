@@ -44,7 +44,7 @@ public class MovimentoCreatedClientEstoque : IConsumer<MovimentoCreated>
         await _repositoryEstoque.UpdateAsync(estoque);
         if (movimento.TipoMovimento == TipoMovimento.Saida)
         {
-            await _publishEndPoint.Publish<EstoqueChanged>(estoque.Produto.Id);
+            await _publishEndPoint.Publish(new EstoqueChanged(estoque.Produto.Id));
         }
     }
 }
