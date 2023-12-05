@@ -39,7 +39,7 @@ public class EstoqueChangedClientEstoque : IConsumer<EstoqueChanged>
         var pontoRessuprimento = CalculaPontoRessuprimento(new ParametrosCalculoRessuprimento(saidasProduto, comprasProdutos, produto, estoque));
         if (estoque.Quantidade <= pontoRessuprimento)
         {
-            await GeraNovoPedido(produto, pontoRessuprimento.GetValueOrDefault(), pontoRessuprimento.GetValueOrDefault());
+            await GeraNovoPedido(produto, pontoRessuprimento.GetValueOrDefault());
         }
     }
 
@@ -69,7 +69,7 @@ public class EstoqueChangedClientEstoque : IConsumer<EstoqueChanged>
         public Estoque Estoque { get; set; }
     }
 
-    private async Task GeraNovoPedido(Produto produto, int pontoRessuprimento, int estoqueSeguranca)
+    private async Task GeraNovoPedido(Produto produto, int pontoRessuprimento)
     {
         var pedidos = await _repositoryPedidoCompra.GetAllAsync();
         long ultimoPedido = !pedidos.Any() ? 0 : pedidos.Max(pedido => pedido.NumeroPedido);
@@ -85,7 +85,7 @@ public class EstoqueChangedClientEstoque : IConsumer<EstoqueChanged>
             Itens = new List<ItemPedido> {new() {
                 Id = Guid.NewGuid(),
                 Produto = produto,
-                Quantidade = pontoRessuprimento + estoqueSeguranca,
+                Quantidade = pontoRessuprimento,
                 PrecoUnitario = produto.PrecoUnitario
             }}
         };
